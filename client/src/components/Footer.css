@@ -1,0 +1,131 @@
+.footer {
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  padding: 60px 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.footer-main {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+/* Left Section - Details */
+.footer-details {
+  flex: 1 1 600px; /* wider left section */
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* space between header, columns, social */
+}
+
+.footer-details > h2 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: var(--color-accent);
+}
+
+/* Contact & Office Hours Columns */
+.footer-details-horizontal {
+  display: flex;
+  gap: 60px; /* space between columns */
+  flex-wrap: wrap;
+}
+
+.footer-column {
+  flex: 1 1 250px; /* responsive width for each column */
+}
+
+.footer-column h4 {
+  color: var(--color-secondary);
+  margin-bottom: 5px;
+}
+
+.footer-column p {
+  margin: 5px 0;
+  line-height: 1.6;
+}
+
+/* Social icons */
+.footer-social-heading {
+  text-align: center;
+  margin: 0;
+  color: var(--color-secondary);
+}
+
+.footer-social {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* spacing between icons */
+  margin-top: 5px;
+}
+
+.footer-social .social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  font-size: 1.2rem;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-text);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.footer-social .social-icon:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-accent);
+  border-color: var(--color-secondary);
+  transform: scale(1.1);
+}
+
+/* Footer Copy */
+.footer-copy {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--color-highlight);
+  margin-top: 40px;
+}
+
+/* Footer Links - Privacy & Terms */
+.footer-links {
+  display: flex;
+  justify-content: center; /* center horizontally */
+  gap: 20px;               /* space between links */
+  margin-top: 15px;        /* spacing from social icons */
+}
+
+.footer-link {
+  color: var(--color-highlight);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .footer-main {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .footer-details-horizontal {
+    flex-direction: column;
+    gap: 20px;
+  }
+}

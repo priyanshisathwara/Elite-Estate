@@ -1,0 +1,7 @@
+:root {
+  --color-primary: #2b2622;   /* Dark Espresso → main background / header */
+  --color-secondary: #6b6361; /* Deep Taupe → secondary UI elements */
+  --color-accent: #e6e6e5;    /* Soft Silver → cards, borders, light bg */
+  --color-text: #cecbc7;      /* Light Beige Gray → primary text */
+  --color-highlight: #aaa39d; /* Warm Gray → subtle highlights */
+}

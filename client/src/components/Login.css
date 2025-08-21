@@ -1,0 +1,106 @@
+/* Login Page Styling */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-left: 50px;
+  background-color: var(--color-accent); /* Soft Platinum */
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Container Box */
+.login-container {
+  background: var(--color-text); /* White */
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  width: 350px;
+  text-align: center;
+  color: var(--color-primary); /* Deep Charcoal text */
+}
+
+/* Form Inputs */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: var(--color-primary);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--color-accent);
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #fff;
+  color: var(--color-primary);
+}
+
+/* Error Message */
+.error {
+  color: crimson;
+  font-size: 14px;
+}
+
+/* Forgot Password */
+.forgot-password {
+  display: block;
+  text-align: right;
+  color: var(--color-secondary); /* Rich Emerald */
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+  color: var(--color-highlight); /* Touch of Gold */
+}
+
+/* Buttons */
+.login-btn {
+  display: block;
+  width: 100%;
+  padding: 10px 20px;
+  background: var(--color-secondary); /* Rich Emerald */
+  color: var(--color-text); /* White */
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: all 0.3s ease, transform 0.2s;
+}
+
+.login-btn:hover {
+ background-color: var(--color-highlight); 
+  transform: scale(1.02);
+}
+
+.register-btn-in-login {
+  display: block;
+  width: 100%;
+  background: var(--color-primary); /* Deep Charcoal */
+  color: var(--color-text); /* White */
+  padding: 12px;
+  border: 1px solid var(--color-accent);
+  border-radius: 5px;
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+.register-btn-in-login:hover {
+  background: var(--color-highlight); /* Gold hover */
+  color: var(--color-primary); /* Dark text on gold */
+}

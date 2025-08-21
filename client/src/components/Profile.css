@@ -1,0 +1,143 @@
+.profile-container {
+  padding: 40px 20px;
+  background-color: #f9fafb;
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+
+/* Center profile details */
+.profile-details {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Profile Info Styling */
+.profile-info {
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.profile-info p {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+/* Logout button styling */
+.logout-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-weight: bold;
+  border: none;
+  background-color: #ef4444;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #b91c1c;
+}
+
+/* Center booked places section */
+.booked-places {
+  width: 100vw;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', sans-serif;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;        /* Center horizontally */
+  justify-content: center;    /* Center vertically */
+  text-align: center;
+}
+
+/* Heading for booked places */
+.booked-places h3 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  color: #1f2937;
+}
+
+/* Button Styling */
+.booked-places button {
+  margin: 0 auto 40px auto;
+  padding: 12px 24px;
+  font-size: 18px;
+  font-weight: 600;
+ 
+  background-color: #0398ace4;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.booked-places button:hover {
+  background-color: #028b9e;
+  transform: scale(1.05);
+}
+
+/* Bookings list with flexbox */
+.bookings-list {
+display: flex;
+flex-direction: row;
+flex-wrap: nowrap;
+gap: 24px;
+overflow-x: auto;
+list-style: none;
+scroll-snap-type: x mandatory;
+max-width: 90vw;
+padding-bottom: 10px;
+justify-content: center; /* Center the list horizontally */
+}
+
+/* Booking card styling */
+.booking-card {
+width: 400px;
+min-width: 400px;           /* Prevent shrinking below 400px */
+flex-shrink: 0;             /* Prevent flexbox from shrinking the card */
+background-color: #fff;
+border-radius: 16px;
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+padding: 16px;
+display: flex;
+flex-direction: column;
+align-items: center;
+transition: transform 0.2s ease;
+scroll-snap-align: start;   /* Optional: for smooth snapping */
+}
+
+.booking-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Booking image styling */
+.booking-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 16px;
+}
+
+/* Booking details styling */
+.booking-details {
+  width: 100%;
+  text-align: left;
+}
+
+.booking-details p {
+  margin: 8px 0;
+  font-size: 15px;
+  color: #2c3e50;
+  line-height: 1.4;
+}

@@ -1,0 +1,105 @@
+/* Register.css - Scoped Styles */
+.register-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--color-accent); /* Soft Platinum */
+}
+
+.register-box {
+  background: var(--color-text); /* White */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 350px;
+  text-align: center;
+  color: var(--color-primary); /* Deep Charcoal text */
+}
+
+.register-title {
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--color-primary); /* Deep Charcoal */
+}
+
+.register-form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.register-form-group label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  color: var(--color-primary); /* Charcoal for labels */
+}
+
+.register-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--color-accent); /* Platinum border */
+  border-radius: 5px;
+  font-size: 16px;
+  background: #fff;
+  color: var(--color-primary);
+}
+
+.register-input:focus {
+  border-color: var(--color-secondary); /* Emerald highlight on focus */
+  outline: none;
+  box-shadow: 0 0 4px rgba(15, 157, 88, 0.4);
+}
+
+.register-error {
+  color: crimson;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}
+
+.register-btn {
+  width: 100%;
+  padding: 10px;
+  background: var(--color-secondary); /* Emerald */
+  color: var(--color-text); /* White */
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s ease, transform 0.2s;
+}
+
+.register-btn:hover {
+ background-color: var(--color-highlight);
+  transform: scale(1.02);
+}
+
+.register-login-text {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--color-primary); /* Deep Charcoal */
+}
+
+.register-login-btn {
+  display: inline-block;
+  width: 100%;
+  padding: 10px;
+  background: var(--color-primary); /* Charcoal */
+  color: var(--color-text); /* White */
+  text-align: center;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.register-login-btn:hover {
+  background: var(--color-highlight); /* Gold */
+  color: var(--color-primary); /* Charcoal text on gold */
+}

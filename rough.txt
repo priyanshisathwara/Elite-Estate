@@ -1,0 +1,124 @@
+ const handleSubmit = (e) => {
+        e.preventDefault()
+        axios.post('http://localhost:8000/api/register', {name, email, password})
+        .then(result =>{ 
+            console.log(result)
+            setMessage('Register Successfully'); 
+            setProgress(100);
+        })
+        .catch(err => console.log(err))
+    }
+
+    useEffect(() => {
+        if (message) {
+            let interval = setInterval(() => {
+                setProgress(prev => {
+                    if (prev <= 0) {
+                        clearInterval(interval);
+                        navigate('/'); // Navigate when progress is 0
+                        return 0;
+                    }
+                    return prev - 1.67; // Decrease over 3 seconds
+                });
+            }, 50); // Update every 50ms
+
+            return () => clearInterval(interval);
+        }
+    }, [message, navigate]);
+
+    return (
+        <>
+        {message && (
+                <div style={{
+                    position: 'absolute',
+                    top: '10px',
+                    right: '10px',
+                    backgroundColor: 'white',
+                    color: 'black',
+                    padding: '8px 12px',
+                    borderRadius: '5px',
+                    fontSize: '14px',
+                    width: '300px',
+                    textAlign: 'center',
+                    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
+                }}>
+                    {message}
+                    {/* Progress Bar */}
+                    <div style={{
+                        height: '4px',
+                        backgroundColor: 'green',
+                        width: `${progress}%`,
+                        transition: 'width 0.05s linear',
+                        marginTop: '5px',
+                        borderRadius: '5px'
+                    }} />
+                </div>
+            )}
+
+
+
+login
+
+const handleSubmit = (e) => {
+        e.preventDefault()
+        axios.post('http://localhost:8000/login', {email, password})
+        .then(result => {
+            console.log("Response Data:", result.data);
+            if(result.data.Login){
+                setMessage('Login Successfully'); 
+                setProgress(100);
+            } else{
+                setMessage('No record found');
+            }
+            console.log(result)
+           
+        })
+        .catch(err => console.log(err))
+    }
+
+    useEffect(() => {
+        if (message === 'Login Successfully') {
+            let interval = setInterval(() => {
+                setProgress(prev => {
+                    if (prev <= 0) {
+                        clearInterval(interval);
+                        navigate('/'); // Navigate when progress is 0
+                        return 0;
+                    }
+                    return prev - 1.67; // Decrease over 3 seconds
+                });
+            }, 50); // Update every 50ms
+
+            return () => clearInterval(interval);
+        }
+    }, [message, navigate]);
+
+
+    return (
+        <>
+        {message && (
+                <div style={{
+                    position: 'absolute',
+                    top: '10px',
+                    right: '10px',
+                    backgroundColor: 'white',
+                    color: 'black',
+                    padding: '8px 12px',
+                    borderRadius: '5px',
+                    fontSize: '14px',
+                    width: '300px',
+                    textAlign: 'center',
+                    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
+                }}>
+                    {message}
+                    {/* Progress Bar */}
+                    <div style={{
+                        height: '4px',
+                        backgroundColor: 'green',
+                        width: `${progress}%`,
+                        transition: 'width 0.05s linear',
+                        marginTop: '5px',
+                        borderRadius: '5px'
+                    }} />
+                </div>
+            )}

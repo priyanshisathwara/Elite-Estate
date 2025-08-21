@@ -1,0 +1,40 @@
+.tos-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', sans-serif;
+    color: #2c3e50;
+  }
+  
+  .tos-container h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    color: #34495e;
+    margin-bottom: 0.5rem;
+  }
+  
+  .tos-container p {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  
+  .tos-container section {
+    margin-bottom: 2rem;
+  }
+  
+  .tos-container h2 {
+    color: #2c7be5;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .tos-container ul {
+    list-style: disc;
+    margin-left: 2rem;
+    color: #444;
+  }
+  

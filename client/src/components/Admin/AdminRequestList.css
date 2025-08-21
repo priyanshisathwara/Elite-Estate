@@ -1,0 +1,93 @@
+/* AdminRequestList.css */
+
+.admin-request-container {
+    padding: 2rem;
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    min-height: 100vh;
+    margin-left: 250px;
+  }
+  
+  .filter-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .filter-buttons button {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .filter-buttons button:hover {
+    background-color: #0056b3;
+  }
+  
+  .admin-request-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .admin-request-table th,
+  .admin-request-table td {
+    padding: 0.9rem 1.2rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .admin-request-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+  }
+  
+  .admin-request-table tr:hover {
+    background-color: #fafafa;
+  }
+  
+  .approve-btn,
+  .reject-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .approve-btn {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .approve-btn:hover {
+    background-color: #218838;
+  }
+  
+  .reject-btn {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .reject-btn:hover {
+    background-color: #c82333;
+  }
+  
+  p {
+    font-size: 1rem;
+    color: #555;
+    margin-top: 1rem;
+  }
+  
+  .admin-request-table-wrapper {
+    overflow-x: auto;
+  }
+  

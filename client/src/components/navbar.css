@@ -1,0 +1,239 @@
+/* Navbar Styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: var(--color-accent); /* Soft Platinum */
+  position: fixed;
+  inset: 0 0 auto 0;
+  width: 100%;
+  z-index: 1000;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Add this class dynamically when scrolled */
+.navbar.scrolled {
+  background-color: rgba(26, 26, 26, 0.95); /* Deep Charcoal with transparency */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Logo Styling */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--color-primary); /* Deep Charcoal */
+}
+
+.black-text {
+  color: var(--color-text); /* White */
+  font-family: 'cursive';
+}
+
+.blue-text {
+  color: var(--color-secondary); /* Emerald */
+  font-family: 'cursive';
+}
+
+/* Navigation Links */
+.nav-link-detail {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font-family: monospace;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--color-primary); /* Charcoal */
+  transition: color 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.nav-links a:hover,
+.nav-links .active {
+  color: var(--color-secondary); /* Emerald */
+}
+
+/* Change navbar color on scroll */
+.navbar.scrolled .nav-links a {
+  color: var(--color-text); /* White */
+}
+
+.navbar.scrolled .logo {
+  color: var(--color-text); /* White */
+}
+
+/* Dropdown Menu */
+.dropdown {
+  position: relative;
+  cursor: pointer;
+  color: var(--color-secondary); /* Emerald */
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--color-text); /* White background */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
+  padding: 10px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  width: 180px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.dropdown:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+}
+
+.dropdown-menu li {
+  padding: 10px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--color-accent); /* Platinum divider */
+}
+
+.dropdown-menu li:last-child {
+  border-bottom: none;
+}
+
+.dropdown-menu li a {
+  color: var(--color-primary); /* Charcoal */
+  text-decoration: none;
+  display: block;
+  font-family: monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.dropdown-menu li a:hover {
+  color: var(--color-secondary); /* Emerald */
+}
+
+/* Register Button */
+.register-btn {
+  background: var(--color-secondary); /* Emerald */
+  color: var(--color-text); /* White */
+  padding: 10px 20px;
+  border: 2px solid var(--color-secondary);
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.register-btn:hover {
+  background: var(--color-highlight); /* Gold hover for premium touch */
+  border-color: var(--color-highlight);
+  color: var(--color-primary); /* Charcoal text on gold */
+}
+
+.navbar.scrolled .register-btn {
+  color: var(--color-secondary);
+  border: 2px solid var(--color-secondary);
+  background: transparent;
+}
+
+.navbar.scrolled .register-btn:hover {
+  background: var(--color-secondary); /* Emerald */
+  color: var(--color-text); /* White */
+}
+
+.profile-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-icon {
+  font-size: 30px;
+  color: var(--color-secondary); /* Emerald */
+  cursor: pointer;
+}
+
+/* Hamburger Menu */
+.menu-toggle {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--color-primary); /* Charcoal */
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-link-detail {
+    display: none;
+  }
+  
+  .nav-link-detail.active {
+    display: flex;
+    justify-content: center;
+    background-color: var(--color-accent); /* Platinum */
+    padding: 1.5rem 2rem;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .nav-links li {
+    font-size: 1rem;
+    padding: 0.5rem 0;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--color-primary); /* Charcoal */
+  }
+  
+  .nav-actions {
+    width: 100%;
+    margin-top: 1rem;
+    justify-content: flex-start;
+  }
+
+  .register-btn {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    background: var(--color-secondary);
+    color: var(--color-text);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .register-btn:hover {
+    background-color: var(--color-highlight); /* Gold hover */
+    color: var(--color-primary); /* Charcoal */
+  }
+}

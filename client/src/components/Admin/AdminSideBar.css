@@ -1,0 +1,123 @@
+/* Sidebar container */
+.sidebar-container {
+  position: relative;
+}
+
+/* Sidebar styling */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 250px;
+  height: 100%;
+  background-color: #053876a0;
+  color: #fff;
+  padding: 20px;
+  transition: left 0.3s ease-in-out;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  background-color: #f5f5f5;
+  width: 200px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu a {
+  display: block;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.menu a:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.menu a:last-child {
+  border-bottom: none;
+}
+
+/* Toggle button */
+.toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: -60px;
+  padding: 10px;
+  background-color: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Overlay (for mobile screens) */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  z-index: 1;
+}
+
+.overlay.active {
+  display: block;
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+  /* For mobile view: Sidebar and overlay */
+  .sidebar-container {
+    z-index: 2;
+  }
+
+  .toggle-btn {
+    display: block;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 3;
+  }
+
+  .sidebar {
+    width: 100%;
+    left: -100%;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .overlay.active {
+    display: block;
+  }
+}
+
+/* For larger screens (desktop) */
+@media (min-width: 769px) {
+  .sidebar {
+    left: 0;
+  }
+
+  .toggle-btn {
+    display: none;
+  }
+
+  .overlay {
+    display: none;
+  }
+}
