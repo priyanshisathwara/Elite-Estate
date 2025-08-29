@@ -5,74 +5,51 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function SearchBar() {
-    const [search, setSearch] = useState("");
+    const [city, setCity] = useState("");
+    const [propertyType, setPropertyType] = useState("");
+    const [minPrice, setMinPrice] = useState("");
+    const [maxPrice, setMaxPrice] = useState("");
     const [searchData, setSearchData] = useState([]);
-    const [selectedItem, setSelectedItem] = useState(-1);
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        setSearch(e.target.value);
-        setSelectedItem(-1); // Reset selection on new input
-    };
-
-    const handleClose = () => {
-        setSearch("");
-        setSearchData([]);
-        setSelectedItem(-1);  // ✅ Fixed
-    };
-
-    const handleKeyDown = (e) => {
-        if (searchData.length === 0) return;
-
-        if (e.key === "ArrowUp") {
-            setSelectedItem(prev => Math.max(prev - 1, 0)); // Prevent going below 0
-        } else if (e.key === "ArrowDown") {
-            setSelectedItem(prev => Math.min(prev + 1, searchData.length - 1)); // Prevent going out of range
-        } else if (e.key === "Enter") {
-            if (selectedItem >= 0 && selectedItem < searchData.length) {
-                handleCityClick(searchData[selectedItem]); // ✅ Safe navigation
-            }
-        }
-    };
-
-
-    const handleCityClick = (city) => {
-        if (!city) {
-            console.error("Invalid city data:", city);
-            return;
-        }
-
-        // Navigate to city result page using only city name
-        if (city.city) {
-            console.log("City clicked:", city);
-            navigate(`/places/name/${encodeURIComponent(city.city)}`);
-        } else {
-            console.error("City data is missing the 'city' field:", city);
-        }
-        setSearch("");
-        setSearchData([]);
-    };
-
-
+    // 🟢 Auto search with debounce
     useEffect(() => {
-        if (search.trim() === "") {
-            setSearchData([]); // Clear results when input is empty
+        if (!city && !propertyType && !minPrice && !maxPrice) {
+            setSearchData([]);
             return;
         }
 
-        axios.post("http://localhost:8000/api/auth/search", { query: search })
+        const delayDebounce = setTimeout(() => {
+            axios.post("http://localhost:8000/api/auth/search", {
+                city,
+                property_type: propertyType,
+                minPrice: minPrice || null,
+                maxPrice: maxPrice || null
+            })
             .then((res) => {
-                // Remove duplicate city names
-                const uniqueCities = Array.from(new Set(res.data.map(item => item.city)))
-                    .map(city => res.data.find(item => item.city === city));
-                setSearchData(uniqueCities); // Set unique cities
+                setSearchData(res.data || []);
             })
             .catch(err => {
                 console.error("Error fetching search results:", err);
                 setSearchData([]);
             });
+        }, 500); // wait 500ms after user stops typing
 
-    }, [search]);
+        return () => clearTimeout(delayDebounce);
+    }, [city, propertyType, minPrice, maxPrice]);
+
+    const handleClose = () => {
+        setCity("");
+        setPropertyType("");
+        setMinPrice("");
+        setMaxPrice("");
+        setSearchData([]);
+    };
+
+    const handleItemClick = (place) => {
+        navigate(`/places/name/${encodeURIComponent(place.city)}`);
+        handleClose();
+    };
 
     return (
         <section className='search-section'>
@@ -81,14 +58,34 @@ export default function SearchBar() {
                     <input
                         type='text'
                         className='search-input'
-                        placeholder='Search...'
-                        autoComplete='off'
-                        onChange={handleChange}
-                        value={search}
-                        onKeyDown={handleKeyDown}
+                        placeholder='City'
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
                     />
+                    <input
+                        type='text'
+                        className='search-input'
+                        placeholder='Property Type (Apartment, Villa, etc.)'
+                        value={propertyType}
+                        onChange={(e) => setPropertyType(e.target.value)}
+                    />
+                    <input
+                        type='number'
+                        className='search-input'
+                        placeholder='Min Price'
+                        value={minPrice}
+                        onChange={(e) => setMinPrice(e.target.value)}
+                    />
+                    <input
+                        type='number'
+                        className='search-input'
+                        placeholder='Max Price'
+                        value={maxPrice}
+                        onChange={(e) => setMaxPrice(e.target.value)}
+                    />
+
                     <div className='search-icon'>
-                        {search === "" ? (
+                        {(!city && !propertyType && !minPrice && !maxPrice) ? (
                             <AiOutlineSearch size={24} color="#FFFFFF" />
                         ) : (
                             <AiOutlineClose size={24} color="#FFFFFF" onClick={handleClose} />
@@ -98,18 +95,21 @@ export default function SearchBar() {
 
                 {searchData.length > 0 && (
                     <div className="search-result">
-                        {searchData.map((data, index) => (
+                        {searchData.map((place, index) => (
                             <div
                                 key={index}
-                                onClick={() => handleCityClick(data)}
-                                className={selectedItem === index ? 'search-suggestion-line active' : 'search-suggestion-line'}>
-                                {data.city}
+                                onClick={() => handleItemClick(place)}
+                                className="search-suggestion-line"
+                            >
+                                <strong>{place.city}</strong> | {place.property_type}
+                                <span style={{ float: "right", fontWeight: "bold" }}>
+                                    ₹{place.price}
+                                </span>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
         </section>
-
     );
 }

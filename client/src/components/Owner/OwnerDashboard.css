@@ -1,4 +1,3 @@
-/* src/components/Owner/OwnerDashboard.css */
 
 .owner-dashboard-container {
   padding: 40px;
@@ -7,16 +6,16 @@
 
 .owner-dashboard-container h1 {
   font-size: 2.5rem;
-  color: #333;
+  color: var(--color-text);
   margin-bottom: 40px;
 }
 
-.card-quote{
+.card-quote {
   margin-top: 10px;
-    font-size: 14px;
-    color: #0097a7;
-    font-style: italic;
-    font-weight: 500;
+  font-size: 14px;
+  color: var(--color-secondary);
+  font-style: italic;
+  font-weight: 500;
 }
 
 .dashboard-cards {
@@ -27,10 +26,10 @@
 }
 
 .dashboard-card {
-  background: #ffffff;
+  background: var(--color-accent);
   padding: 30px 20px;
   border-radius: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   width: 280px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
@@ -38,16 +37,16 @@
 
 .dashboard-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
 .dashboard-card h2 {
   font-size: 1.8rem;
-  color: #0077b6;
+  color: var(--color-primary);
   margin-bottom: 10px;
 }
 
 .dashboard-card p {
   font-size: 1rem;
-  color: #555;
+  color: var(--color-highlight);
 }

@@ -3,29 +3,27 @@ import db from "../config/db.js";
 import { Mail } from "../config/mailer.js";
 
 
-export const addPlace = async (req, res) => {
-  const { place_name, location, price } = req.body; 
-  const { name, role } = req.user; 
-  
+// Get Place by ID
+export const getPlaceById = (req, res) => {
+  const { id } = req.params;
+  const sqlGetPlace = "SELECT * FROM places WHERE id = ? AND is_approved = 1 LIMIT 1";
 
-  if (role !== "owner") {
-    return res.status(403).json({ error: "Access denied. Only owners can add properties." });
-  }
+  db.query(sqlGetPlace, [id], (err, results) => {
+    if (err) {
+      return res.status(500).json({
+        error: "Error fetching place",
+        details: err.message,
+      });
+    }
 
-  if (!place_name || !location || !price) {
-    return res.status(400).json({ error: 'All fields are required' });
-  }
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Place not found" });
+    }
 
-  console.log("Creating place...");
-
-  try {
-    await createPlace(place_name, location, price, name); // Use name as ownerName
-    return res.json({ message: 'Successfully Created' });
-  } catch (error) {
-    console.error("Error creating place:", error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-  }
+    return res.status(200).json(results[0]); // send single place
+  });
 };
+
 
 export const getPlacesForOwner = async (req, res) => {
   try {
@@ -105,64 +103,191 @@ export const placeResult = async (req, res) => {
 
 
 export const createBooking = (req, res) => {
-  const { placeId, checkInDate, checkOutDate, guests, userName, userEmail } = req.body;
+  const {
+    placeId,
+    user_name,
+    user_email,
+    user_phone,
+    transaction_type,
+    start_date,
+    end_date,
+    action_type, // Rent or Buy
+  } = req.body;
 
-  if (!placeId || !checkInDate || !checkOutDate || !guests || !userName) {
-    return res.status(400).json({ error: "All booking fields are required." });
+  console.log(req.body);
+
+  // Basic validation
+  if (!placeId || !user_name || !user_email || !transaction_type) {
+    return res.status(400).json({ error: "Place, user details, and transaction type are required." });
   }
 
-  // Step 1: Check for overlapping bookings
-  const overlapQuery = `
-    SELECT * FROM bookings
-    WHERE place_id = ?
-      AND (
-        (check_in_date <= ? AND check_out_date >= ?) OR
-        (check_in_date <= ? AND check_out_date >= ?) OR
-        (check_in_date >= ? AND check_out_date <= ?)
-      )
-  `;
+  // Dates required only for Rent
+  if (action_type === "Rent" && (!start_date || !end_date)) {
+    return res.status(400).json({ error: "Start and end dates are required for renting." });
+  }
 
-  db.query(overlapQuery, [
-    placeId,
-    checkOutDate, checkInDate,
-    checkOutDate, checkOutDate,
-    checkInDate, checkOutDate
-  ], (overlapErr, results) => {
-    if (overlapErr) {
-      console.error('Overlap check failed:', overlapErr);
-      return res.status(500).json({ error: 'Server error during overlap check' });
-    }
+  // If Rent, check date overlaps
+  if (action_type === "Rent") {
+    const checkQuery = `
+      SELECT * 
+      FROM bookings
+      WHERE place_id = ? 
+        AND transaction_type = 'Rent'
+        AND (
+          (start_date <= ? AND end_date >= ?)
+          OR (start_date <= ? AND end_date >= ?)
+          OR (start_date >= ? AND end_date <= ?)
+        )
+    `;
+    db.query(
+      checkQuery,
+      [placeId, start_date, start_date, end_date, end_date, start_date, end_date],
+      (checkErr, rows) => {
+        if (checkErr) {
+          console.error("Error checking availability:", checkErr);
+          return res.status(500).json({ error: "Failed to check availability" });
+        }
 
-    if (results.length > 0) {
-      return res.status(409).json({ message: 'This place is already booked for the selected dates.' });
-    }
+        if (rows.length > 0) {
+          return res.status(409).json({ error: "Place is already booked for the selected dates." });
+        }
 
-    // Step 2: Insert booking if no conflict
+        insertBooking(); // proceed to insert
+      }
+    );
+  } else {
+    // Buy: no date checks
+    insertBooking();
+  }
+
+  function insertBooking() {
     const insertQuery = `
-      INSERT INTO bookings (place_id, check_in_date, check_out_date, guests, userName)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO bookings
+      (place_id, user_name, user_email, user_phone, transaction_type, start_date, end_date, status)
+      VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending')
     `;
 
-    db.query(insertQuery, [placeId, checkInDate, checkOutDate, guests, userName], (insertErr, result) => {
-      if (insertErr) {
-        console.error('Booking failed:', insertErr);
-        return res.status(500).json({ error: 'Booking failed', details: insertErr.message });
+    db.query(
+      insertQuery,
+      [placeId, user_name, user_email, user_phone || null, transaction_type, start_date || null, end_date || null],
+      (insertErr, result) => {
+        if (insertErr) {
+          console.error("Booking failed:", insertErr);
+          return res.status(500).json({ error: "Booking failed", details: insertErr.message });
+        }
+
+        // Send confirmation email
+        try {
+          const mail = new Mail();
+          mail.setTo(user_email);
+          mail.setSubject(`${action_type === "Rent" ? "Booking" : "Purchase"} Request Pending - Elite Estate`);
+          mail.setText(`
+            Hello ${user_name},
+            Your ${action_type === "Rent" ? "booking" : "purchase"} request for place ID ${placeId} has been received.
+            ${action_type === "Rent" ? `Dates: ${start_date} to ${end_date}` : ""}
+            Transaction Type: ${transaction_type}.
+            Our team will review and confirm it soon.
+          `);
+          mail.send();
+        } catch (mailErr) {
+          console.error("Mail send failed:", mailErr);
+        }
+
+        res.status(201).json({
+          message: `${action_type === "Rent" ? "Booking" : "Purchase"} request created successfully`,
+          bookingId: result.insertId,
+        });
+      }
+    );
+  }
+};
+
+
+
+
+export const updateBookingStatus = (req, res) => {
+  const { bookingId } = req.params;
+  const { status } = req.body; // "Confirmed" or "Rejected"
+
+  if (!["Confirmed", "Cancelled"].includes(status)) {
+    return res.status(400).json({ error: "Invalid status value" });
+  }
+
+  const updateQuery = `UPDATE bookings SET status = ? WHERE id = ?`;
+
+  db.query(updateQuery, [status, bookingId], (err, result) => {
+    if (err) {
+      console.error("Error updating booking status:", err);
+      return res.status(500).json({ error: "Failed to update booking status" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Booking not found" });
+    }
+
+    // ✅ Get user email to notify
+    const fetchQuery = `SELECT user_name, user_email, place_id, transaction_type, start_date, end_date 
+                        FROM bookings WHERE id = ?`;
+
+    db.query(fetchQuery, [bookingId], (fetchErr, rows) => {
+      if (fetchErr) {
+        console.error("Error fetching booking details:", fetchErr);
+        return res.status(500).json({ error: "Failed to fetch booking details" });
       }
 
-      const mail = new Mail();
-      mail.setTo(userEmail);
-      mail.setSubject("Booking Confirmed");
-      mail.setText(`
-        Hello ${userName},
-        Your booking has been confirmed from ${checkInDate} to ${checkOutDate}.
-        Thank you for choosing our service!
-      `);
-      mail.send(); // Assuming this handles its own errors/logs
+      const booking = rows[0];
 
-      res.status(201).json({ message: 'Booking confirmed', bookingId: result.insertId });
+      try {
+        const mail = new Mail();
+        mail.setTo(booking.user_email);
+        mail.setSubject(
+          status === "Confirmed"
+            ? "Booking Confirmed - Elite Estate"
+            : "Booking Rejected - Elite Estate"
+        );
+        mail.setText(
+          status === "Confirmed"
+            ? `Hello ${booking.user_name},\n\nYour booking for place ID ${booking.place_id} has been CONFIRMED ✅.\n\nTransaction: ${booking.transaction_type}\nDates: ${booking.start_date} → ${booking.end_date}\n\nThank you for choosing Elite Estate.`
+            : `Hello ${booking.user_name},\n\nUnfortunately, your booking for place ID ${booking.place_id} has been REJECTED ❌.\n\nTransaction: ${booking.transaction_type}\nDates: ${booking.start_date} → ${booking.end_date}\n\nPlease try another property.`
+        );
+        mail.send();
+      } catch (mailErr) {
+        console.error("Mail send failed:", mailErr);
+      }
+
+      res.json({ message: `Booking ${status.toLowerCase()} successfully` });
     });
   });
 };
+
+
+
+export const getBookingsForAdmin = (req, res) => {
+  const { status } = req.body; // Optional: Pending, Confirmed, Cancelled
+  let sql = "SELECT * FROM bookings";
+  let params = [];
+
+  if (status) {
+    sql += " WHERE status = ?";
+    params.push(status);
+  }
+
+  sql += " ORDER BY start_date DESC";
+
+  db.query(sql, params, (err, result) => {
+    if (err) {
+      console.error("Error fetching bookings:", err);
+      return res.status(500).json({ error: "Failed to fetch bookings" });
+    }
+
+    return res.status(200).json({
+      message: "Bookings list",
+      data: result,
+    });
+  });
+};
+
+
 
 
 

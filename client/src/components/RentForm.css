@@ -1,0 +1,88 @@
+.rent-form-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background: var(--color-primary);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  color: var(--color-text);
+  font-family: "Inter", sans-serif;
+}
+
+.property-summary {
+  margin-bottom: 25px;
+  padding: 20px;
+  background: var(--color-secondary);
+  border-radius: 12px;
+  color: var(--color-text);
+}
+
+.property-summary h2 {
+  margin: 0 0 10px 0;
+  color: var(--color-accent);
+  font-size: 1.8rem;
+}
+
+.property-summary p {
+  margin: 6px 0;
+  font-size: 1rem;
+}
+
+.rent-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rent-form h3 {
+  font-size: 1.4rem;
+  color: var(--color-accent);
+  margin-bottom: 10px;
+}
+
+.rent-form label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-highlight);
+}
+
+.rent-form input,
+.rent-form select,
+.rent-form textarea {
+  padding: 12px;
+  border: 1px solid var(--color-highlight);
+  border-radius: 10px;
+  background: var(--color-secondary);
+  color: var(--color-text);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.rent-form input:focus,
+.rent-form select:focus,
+.rent-form textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  background: var(--color-primary);
+}
+
+.rent-btn {
+  padding: 14px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  background: var(--color-accent);
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: transform 0.2s ease, all 0.3s ease;
+}
+
+.rent-btn:hover {
+  background: var(--color-highlight);
+  transform: translateY(-2px);
+}
+
+.rent-btn:active {
+  transform: scale(0.98);
+}

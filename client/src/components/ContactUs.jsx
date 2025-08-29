@@ -23,7 +23,8 @@ const ContactUs = () => {
   return (
     <div className="contact-container">
       <h2>Contact Us</h2>
-      <p>We're here to help! Whether you’re a host or a traveler, feel free to drop us a message.</p>
+     <p>We're here to help! Whether you're a property owner or a client looking for your dream home, feel free to reach out to us.</p>
+
 
       <form className="contact-form" onSubmit={handleSubmit}>
         <input

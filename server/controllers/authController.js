@@ -230,19 +230,32 @@ export const resetPassword = async (req, res) => {
 };
 
 export const searchData = async (req, res) => {
-  const { query } = req.body;
-  if (!query) return res.json([]); // Always return an array
+  const { city, property_type, minPrice, maxPrice } = req.body;
 
-  const sql = "SELECT * FROM places WHERE LOWER(city) LIKE ? "; // Search by city
-  const searchValue = `%${query.toLowerCase()}%`;
+  let sql = "SELECT * FROM places WHERE 1=1";
+  const params = [];
 
-  db.query(sql, [searchValue], (err, results) => {
-      if (err) {
-          return res.status(500).json({ error: "Database query failed", details: err.message });
-      } // ✅ Log query results
-        return res.status(200).json(results || []);
+  if (city) {
+    sql += " AND LOWER(city) LIKE ?";
+    params.push(`%${city.toLowerCase()}%`);
+  }
+  if (property_type) {
+    sql += " AND LOWER(property_type) LIKE ?";
+    params.push(`%${property_type.toLowerCase()}%`);
+  }
+  if (minPrice && maxPrice) {
+    sql += " AND price BETWEEN ? AND ?";
+    params.push(minPrice, maxPrice);
+  }
+
+  db.query(sql, params, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Database query failed", details: err.message });
+    }
+    return res.status(200).json(results || []);
   });
 };
+
 
 
 export const cityResult = async (req, res) => {

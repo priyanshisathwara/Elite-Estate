@@ -51,7 +51,6 @@ export default function Navbar() {
         <ul className="nav-links">
           <Link to="/"><li className="active">Home</li></Link>
           <Link to="/about-us"><li>About Us</li></Link>
-          <Link to="/blog"><li>Blog</li></Link>
           <Link to="/places"><li>Places</li></Link>
 
           {/* Actions inside menu for mobile */}

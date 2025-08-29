@@ -1,0 +1,223 @@
+.sections {
+    color: var(--color-text);
+    padding: 4rem 2rem;
+    font-family: "Poppins", sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Animation */
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1s forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.categories {
+  background: rgba(52, 52, 48, 0.1); /* Soft Silver with transparency */
+  padding: 40px 20px; 
+  border-radius: 12px; /* Optional */
+}
+
+
+/* Add spacing to each section */
+.sections section {
+padding: 26px 20px; /* top/bottom 60px, left/right 20px */
+  margin: 40px 0;       /* space between sections */
+  border-radius: 12px;  /* smooth edges */
+}
+
+/* Headings spacing */
+.sections h2 {
+  margin-bottom: 25px;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.sections h2::after {
+    content: "";
+    display: block;
+    width: 70px;
+    height: 3px;
+    background: var(--color-highlight);
+    margin: 0.5rem auto 0;
+    border-radius: 2px;
+}
+
+/* Category Cards */
+.category-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.category-cards .card {
+    background: rgba(230, 230, 229, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--color-highlight);
+    color: black;
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: 0.3s ease;
+    min-width: 180px;
+    text-align: center;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.category-cards .card:hover {
+    background: var(--color-highlight);
+    color: var(--color-primary);
+    transform: translateY(-6px) scale(1.05);
+}
+
+.why-choose {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),    /* deepest espresso */
+    var(--color-secondary),  /* taupe transition */
+    var(--color-highlight)   /* lighter warm gray */
+  );
+  color: var(--color-accent);  /* soft silver for readability */
+  padding: 40px 20px;
+  border-radius: 12px;
+}
+
+
+
+/* Why Choose */
+.why-choose ul {
+    list-style: none;
+    padding: 0;
+    max-width: 600px;
+    margin: auto;
+}
+
+.why-choose li {
+    margin: 0.8rem 0;
+    font-size: 1.1rem;
+    padding: 0.8rem 1rem;
+    border-left: 4px solid var(--color-highlight);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.why-choose li:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateX(6px);
+}
+
+/* How It Works */
+.steps {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.steps .step {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-highlight));
+    color: var(--color-primary);
+    padding: 1.5rem;
+    border-radius: 16px;
+    font-weight: 600;
+    min-width: 200px;
+    text-align: center;
+    transition: 0.3s ease;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+.steps .step:hover {
+    transform: translateY(-6px) scale(1.05);
+}
+
+/* Testimonials */
+.reviews {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.review {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 14px;
+    max-width: 320px;
+    text-align: center;
+    border: 1px solid var(--color-highlight);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+}
+
+.review:hover {
+    transform: translateY(-6px);
+}
+
+.review p {
+    font-style: italic;
+    margin-bottom: 0.8rem;
+}
+
+.review span {
+    color: gold;
+    font-size: 1.3rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.review h4 {
+    font-size: 0.9rem;
+    color: var(--color-accent);
+    font-weight: 500;
+}
+
+/* CTA */
+.cta {
+    text-align: center;
+    margin-top: 4rem;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg,
+            var(--color-secondary),
+            var(--color-highlight));
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.cta h2 {
+    color: var(--color-accent);
+    margin-bottom: 1.5rem;
+}
+
+.cta-btn {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.9rem 2.5rem;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-text));
+    color: var(--color-primary);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.cta-btn:hover {
+    background: var(--color-highlight);
+    transform: scale(1.08);
+}

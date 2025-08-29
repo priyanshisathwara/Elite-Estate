@@ -42,7 +42,7 @@ export class Mail {
         this.mailOptions = {
             from: {
                 address: process.env.EMAIL_USER,
-                name: "Vacation Rental",
+                name: "Elite Estate",
             },
         };
     }

@@ -1,84 +1,132 @@
 /* Styles apply only inside the add-place-page class */
 .add-place-page {
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* start at top since the form is long */
     justify-content: center;
-    height: 100vh;  /* Full viewport height */
-    width: 100%;    /* Ensure it covers the entire width */
-    background-color: #f3eded;
+    min-height: 100vh;
+    width: 100%;
+    padding: 30px 15px;
+    background-color: var(--color-primary);
     font-family: 'Poppins', sans-serif;
+    overflow-y: auto; /* allow scroll if too tall */
 }
 
-
 .form-container {
-    max-width: 600px;
-    width: 90%; /* Ensures responsiveness */
-    padding: 20px;
-    background: #fefefe;
-    border-radius: 10px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Stronger shadow for better depth */
+    max-width: 800px; /* wider for more fields */
+    width: 100%;
+    padding: 25px 30px;
+    background: var(--color-accent);
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
     transition: box-shadow 0.3s ease-in-out;
 }
 
 .form-container:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
 }
 
 .add-place-page h2 {
     text-align: center;
-    color: #333;
-    margin-bottom: 20px;
+    color: var(--color-text);
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    font-weight: 600;
 }
 
+/* Form Layout */
 .add-place-page .place-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* two-column layout */
+    gap: 20px;
+}
+
+.add-place-page .form-group {
     display: flex;
     flex-direction: column;
 }
 
-.add-place-page .form-group {
-    margin-bottom: 15px;
-}
-
 .add-place-page label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #555;
-}
-
-.add-place-page input,
-.add-place-page select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--color-highlight);
     font-size: 14px;
 }
 
+.add-place-page input,
+.add-place-page select,
+.add-place-page textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-secondary);
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: var(--color-accent);
+    color: var(--color-primary);
+    resize: vertical;
+}
+
+/* Textarea spans full width */
+.add-place-page textarea {
+    grid-column: span 2;
+    min-height: 100px;
+}
+
+/* Amenities input spans full width */
+#amenities {
+    grid-column: span 2;
+}
+
+/* Upload Images section spans full width */
+#images {
+    grid-column: span 2;
+}
+
+/* Preview Section */
+.image-preview-container {
+    grid-column: span 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.image-preview {
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+
+.image-preview:hover {
+    transform: scale(1.05);
+}
+
+/* Submit Button spans full width */
 .add-place-page .submit-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background: rgb(21, 120, 150);
-    color: white;
+    grid-column: span 2;
+    padding: 12px 20px;
+    background: var(--color-secondary);
+    color: var(--color-text);
     font-size: 16px;
     font-weight: bold;
     border: none;
-    border-radius: 5px;
-    text-decoration: none;
+    border-radius: 6px;
+    cursor: pointer;
     transition: all 0.3s ease, transform 0.2s;
 }
 
 .add-place-page .submit-button:hover {
-    /* transform: scale(1.05); */
-    background: rgba(21, 120, 150, 0.763);
-
+    background: rgba(107, 99, 97, 0.8);
+    transform: translateY(-2px);
 }
 
+/* Success & Error Messages */
 .add-place-page .message {
     padding: 10px;
     margin-bottom: 15px;
-    border-radius: 5px;
+    border-radius: 6px;
     font-size: 14px;
+    grid-column: span 2;
 }
 
 .add-place-page .message.success {
@@ -95,9 +143,8 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
-    .add-place-page .form-container {
-        margin: 20px;
-        padding: 15px;
+    .add-place-page .place-form {
+        grid-template-columns: 1fr; /* stack fields on mobile */
     }
 
     .add-place-page h2 {
@@ -105,11 +152,12 @@
     }
 
     .add-place-page input,
-    .add-place-page select {
+    .add-place-page select,
+    .add-place-page textarea {
         font-size: 14px;
     }
 
     .add-place-page .submit-button {
-        font-size: 14px;
+        font-size: 15px;
     }
 }

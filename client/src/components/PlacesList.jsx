@@ -12,7 +12,7 @@ const PlacesList = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const loggedInUser = localStorage.getItem('user');
+    const loggedInUser = localStorage.getItem("user");
     setUser(loggedInUser ? JSON.parse(loggedInUser) : null);
 
     axios
@@ -44,39 +44,57 @@ const PlacesList = () => {
       {/* Hero Section */}
       <section className="hero enhanced-hero">
         <div className="hero-overlay">
-          <div className="hero-content">
-            <h1>Find Your Perfect Vacation Home</h1>
-            <p>Discover top-rated rentals in the most beautiful destinations!</p>
-          </div>
         </div>
       </section>
 
       {/* Search Bar Section */}
       <SearchBar onSearch={handleSearch} />
-
+      {console.log(places)}
       <div className="container">
         <div className="grid">
-          {filteredPlaces.map((place) => (
-            <div key={place.id} className="card">
-              <img
-                src={`http://localhost:8000/uploads/${place.image}`}
-                alt={place.place_name}
-                className="card-image"
-              />
-              <div className="card-content">
-                <h3>{place.place_name}</h3>
-                <p><strong>Location:</strong> {place.location}</p>
-                <p><strong>City:</strong> {place.city}</p>
-                <p><strong>Price:</strong> ₹{place.price}</p>
-                <p className="date"><strong>Added on:</strong> {new Date(place.created_at).toLocaleDateString()}</p>
+          {filteredPlaces.map((place) => {
+            let images = [];
+            try {
+              images = JSON.parse(place.image); // convert string → array
+            } catch (e) {
+              console.error("Image parse error:", e);
+            }
+
+            return (
+              <div key={place.id} className="card">
+                {/* Entire card is clickable → navigates to details */}
+                <Link to={`/placedetails/${place.id}`} className="card-link">
+
+                  {images.length > 0 && (
+                    <img
+                      src={`http://localhost:8000/uploads/${images[0]}`}
+                      alt={place.place_name}
+                      className="card-image"
+                    />
+                  )}
+                  <div className="card-content">
+                    <h3>{place.place_name}</h3>
+                    <p>
+                      <strong>City:</strong> {place.city}
+                    </p>
+                    <p>
+                      <strong>Price:</strong> ₹{place.price}
+                    </p>
+                  </div>
+                </Link>
+
+                {/* Keep Book Now button separate */}
                 <div className="card-buttons">
-                  <Link to={`/book-now/${place.id}`} className="book-now-btn">
+                  <button
+                    className="book-now-btn"
+                    onClick={() => navigate(`/book-now/${place.id}`)} >
                     Book Now
-                  </Link>
+                  </button>
+
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

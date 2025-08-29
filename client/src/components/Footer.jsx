@@ -16,9 +16,9 @@ const Footer = () => {
             <div className="footer-details-horizontal">
               <div className="footer-column">
                 <h4>Contact Us</h4>
-                <p>123 Anywhere St.<br />Any City, ST 12345</p>
-                <p>(123) 456-7890</p>
-                <p>hello@reallygreatsite.com</p>
+                <p>Elite Estate Pvt. Ltd.<br />21, Sunrise Business Park, <br /> MG Road, Ahmedabad, Gujarat – 380015, India</p>
+                <p>+91 98765 43210</p>
+                <p>Email: legal@eliteestate.com</p>
               </div>
 
               <div className="footer-column">
@@ -46,6 +46,8 @@ const Footer = () => {
             <div className="footer-links">
               <a href="/privacy-policy" className="footer-link">Privacy Policy</a>
               <a href="/terms-of-service" className="footer-link">Terms & Conditions</a>
+              <a href="/contact-us" className="footer-link">Contact Us</a>
+
             </div>
 
           </div>

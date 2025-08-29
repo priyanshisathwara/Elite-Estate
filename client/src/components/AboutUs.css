@@ -91,9 +91,14 @@
     padding: 1.5rem;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    color: var(--color-primary);
+    color: var(--color-secondary) ;
 }
 
+.cloumn-container p{
+        font-size: 1rem;
+    color: var(--color-secondary) !important ;
+    margin-top: 1rem;
+}
 .image-container {
     display: flex;
     justify-content: center;
@@ -128,7 +133,7 @@
 
 .about-section p {
     font-size: 1rem;
-    color: var(--color-primary);
+    color: var(--color-secondary);
 }
 
 /* List */

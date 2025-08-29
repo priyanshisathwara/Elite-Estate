@@ -10,19 +10,20 @@ const PrivacyPolicy = () => {
       <section>
         <h2>1. Introduction</h2>
         <p>
-          Welcome to our Vacation Rental App. We are committed to protecting your personal information
-          and your right to privacy. This Privacy Policy describes how we collect, use, and safeguard your data.
+          Welcome to Elite Estate. We value your trust and are committed to protecting your personal 
+          information and your right to privacy. This Privacy Policy explains how we collect, use, and safeguard 
+          your information when you use our platform.
         </p>
       </section>
 
       <section>
         <h2>2. Information We Collect</h2>
-        <p>We collect personal information such as:</p>
+        <p>We may collect personal information such as:</p>
         <ul>
-          <li>Your name and contact details</li>
-          <li>Payment and billing information</li>
-          <li>Booking and rental activity</li>
-          <li>Location data (if enabled)</li>
+          <li>Your name, email address, and phone number</li>
+          <li>Property details you provide when listing</li>
+          <li>Payment and billing information for transactions</li>
+          <li>Activity on the platform, such as inquiries and bookings</li>
         </ul>
       </section>
 
@@ -30,49 +31,52 @@ const PrivacyPolicy = () => {
         <h2>3. How We Use Your Information</h2>
         <p>We use the information to:</p>
         <ul>
-          <li>Facilitate bookings and rentals</li>
-          <li>Communicate with users and hosts</li>
-          <li>Enhance platform security and user experience</li>
-          <li>Comply with legal obligations</li>
+          <li>Enable property listings, inquiries, and transactions</li>
+          <li>Communicate with property owners and clients</li>
+          <li>Improve security, functionality, and user experience</li>
+          <li>Comply with applicable legal and regulatory requirements</li>
         </ul>
       </section>
 
       <section>
         <h2>4. Data Sharing</h2>
         <p>
-          We do not sell or rent your personal data. However, we may share it with third-party services 
-          necessary for payment processing, hosting, or legal compliance.
+          We do not sell or rent your personal data. However, we may share it with trusted third-party 
+          service providers (such as payment processors or hosting providers) or if required by law.
         </p>
       </section>
 
       <section>
         <h2>5. Data Security</h2>
         <p>
-          We implement appropriate security measures to protect your information from unauthorized access, 
-          disclosure, alteration, or destruction.
+          We implement appropriate technical and organizational measures to protect your information 
+          from unauthorized access, misuse, or disclosure.
         </p>
       </section>
 
       <section>
         <h2>6. Your Rights</h2>
         <p>
-          You have the right to access, update, or delete your personal information. You may also opt-out of 
-          marketing emails at any time.
+          You have the right to access, correct, or request deletion of your personal information. 
+          You may also choose to opt-out of receiving promotional communications at any time.
         </p>
       </section>
 
       <section>
         <h2>7. Changes to This Policy</h2>
         <p>
-          We may update this policy occasionally. Any changes will be posted on this page with the updated effective date.
+          We may update this Privacy Policy from time to time. Any updates will be posted on this page, 
+          along with the revised effective date.
         </p>
       </section>
 
       <section>
         <h2>8. Contact Us</h2>
         <p>
-          If you have questions about this Privacy Policy, please contact us at: <br />
-          <strong>Email:</strong> support@vacationrentalapp.com
+          If you have any questions or concerns about this Privacy Policy, please contact us at: <br />
+          <strong>Email:</strong> legal@eliteestate.co.in <br />
+          <strong>Phone:</strong> +91 98765 43210 <br />
+          <strong>Address:</strong> Elite Estate Pvt. Ltd., 21 Sunrise Business Park, MG Road, Ahmedabad, Gujarat – 380015
         </p>
       </section>
     </div>

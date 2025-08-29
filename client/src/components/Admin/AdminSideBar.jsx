@@ -18,6 +18,7 @@ const AdminSideBar = () => {
                 <ul className="menu">
                     <li><Link to="/admin">Home</Link></li>
                     <li><Link to="/admin/request">Request</Link></li>
+                    <li><Link to="/admin/bookings">Bookings</Link></li> 
                 </ul>
 
             </div>

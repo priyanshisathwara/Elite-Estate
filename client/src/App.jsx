@@ -11,7 +11,6 @@ import PlacesList from './components/PlacesList';
 import AboutUs from './components/AboutUs';
 import SearchBar from './components/SearchBar';
 import CityResult from './components/CityResults';
-import Blog from './components/Blog';
 import Admin from './components/Admin/AdminDashboard';
 import Profile from './components/Profile';
 import BookNow from './components/BookNow';
@@ -24,6 +23,9 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsOfService from './components/TermsOfService';
 import ScrollToTop from './components/ScrollToTop';
 import "./app.css";
+import PlaceDetail from './components/PlaceDetail';
+import RentForm from './components/RentForm';
+import Sections from './components/Sections';
 
 function App() {
 
@@ -43,7 +45,6 @@ function App() {
     <Route path='/search' element={<SearchBar />}/>
     <Route path="/places/:id" element={<CityResult />} />
     <Route path="/places/name/:city" element={<CityResult />} />
-    <Route path="/blog" element={<Blog />} />
     <Route path="/admin/*" element={<Admin />} />
     <Route path="/profile" element={<Profile />} />
     <Route path="/book-now/:id" element={<BookNow />} />
@@ -54,6 +55,11 @@ function App() {
     <Route path="/contact-us" element={<ContactUs />} />
     <Route path="/privacy-policy" element={<PrivacyPolicy />} />
     <Route path="/terms-of-service" element={<TermsOfService />} />
+    <Route path="/placedetails/:id" element={<PlaceDetail />} />
+    <Route path="/city/:city" element={<CityResult />} />
+     <Route path="/rent/:id" element={<RentForm />} /> 
+     <Route path="/section" element={<Sections />} /> 
+
   
    </Routes>
    </BrowserRouter>

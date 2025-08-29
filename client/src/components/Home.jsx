@@ -4,6 +4,7 @@ import SearchBar from './SearchBar';
 import "./home.css";
 import { Link, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
+import Sections from './Sections';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -34,9 +35,6 @@ const Home = () => {
     <div>
       <div className='home-container'>
         <Navbar />
-        <div className="search-bar-container">
-          <SearchBar />
-        </div>
         <div className="home-text">
           <h3 className="fade-in">Welcome To</h3>
           <h1 className="slide-up">Elite Estate</h1>
@@ -44,6 +42,8 @@ const Home = () => {
         </div>
 
       </div>
+
+      
 
       {/* {isOwner && (
         <div className="o-add-property-card" onClick={handleAddProperty}>
@@ -60,6 +60,10 @@ const Home = () => {
           </button>
         </div>
       )}
+
+      <SearchBar />
+
+      <Sections />
       
       <Footer />
     </div>
