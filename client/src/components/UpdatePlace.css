@@ -1,84 +1,112 @@
-/* UpdatePlace.css */
 
+/* Page background */
 .update-place-page {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .update-place-page h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .update-place-page p {
-    text-align: center;
-    font-size: 18px;
-    color: #ff3b30;
-  }
-  
-  .update-form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .update-form label {
-    font-size: 16px;
-    margin-bottom: 8px;
-    color: #333;
-  }
-  
-  .update-form input {
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.3s ease;
-  }
-  
-  .update-form input:focus {
-    border-color: #007bff;
-  }
-  
-  .update-form button {
-    padding: 12px;
-    background: rgb(21, 120, 150);
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .update-form button:hover {
-    background: rgba(21, 120, 150, 0.763);
-  }
-  
-  .update-form button:active {
-    background: rgba(21, 120, 150, 0.763);
-  }
-  
-  .update-form button:disabled {
-    background-color: #c4c4c4;
-    cursor: not-allowed;
-  }
-  
-  .update-place-page .loading {
-    text-align: center;
-    font-size: 18px;
-    color: #333;
-  }
-  
-  .update-place-page .unauthorized {
-    font-size: 18px;
-    color: #ff3b30;
-    text-align: center;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 40px;
+  background-color: var(--color-primary);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Form wrapper */
+.form-container {
+  background-color: var(--color-accent);
+  color: var(--color-primary);
+  border-radius: 16px;
+  padding: 30px 40px;
+  max-width: 700px;
+  width: 100%;
+  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+/* Title */
+.form-container h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 1.8rem;
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-highlight);
+  padding-bottom: 10px;
+}
+
+/* Form groups */
+.form-group {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels */
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--color-secondary);
+}
+
+/* Inputs, selects, textarea */
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--color-highlight);
+  border-radius: 8px;
+  background-color: var(--color-accent);
+  color: var(--color-primary);
+  font-size: 1rem;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 5px var(--color-highlight);
+  outline: none;
+}
+
+/* Textarea */
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Image preview */
+.image-preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.image-preview {
+  border-radius: 10px;
+  border: 2px solid var(--color-highlight);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease;
+}
+
+.image-preview:hover {
+  transform: scale(1.05);
+}
+
+/* Submit button */
+.submit-button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 20px;
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease, transform 0.2s ease;
+}
+
+.submit-button:hover {
+  background-color: var(--color-secondary);
+  transform: translateY(-2px);
+}

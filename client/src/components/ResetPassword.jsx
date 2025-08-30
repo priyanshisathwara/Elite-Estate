@@ -3,12 +3,18 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./ResetPassword.css";  // ✅ Import Scoped CSS
+import "./ResetPassword.css";
 
 function ResetPassword() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+
+    // Password validation function
+    const validatePassword = (password) => {
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+        return regex.test(password);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -18,10 +24,17 @@ function ResetPassword() {
             return;
         }
 
+        if (!validatePassword(password)) {
+            toast.error(
+                "Password must be at least 6 characters, include 1 uppercase, 1 lowercase, and 1 number."
+            );
+            return;
+        }
+
         try {
             const response = await axios.post("http://localhost:8000/api/auth/reset-password-form", {
                 email,
-                password
+                password,
             });
 
             if (response.data.status === "Success") {
@@ -63,6 +76,9 @@ function ResetPassword() {
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
+                        <small className="password-hint">
+                            Must be 6+ chars, with uppercase, lowercase & number
+                        </small>
                     </div>
 
                     <button type="submit" className="reset-password-btn">Update Password</button>

@@ -1,15 +1,24 @@
+:root {
+  --color-primary: #2b2622;   /* Dark Espresso → main background / header */
+  --color-secondary: #6b6361; /* Deep Taupe → secondary UI elements */
+  --color-accent: #e6e6e5;    /* Soft Silver → cards, borders, light bg */
+  --color-text: #80807f;      /* Light Beige Gray → primary text */
+  --color-highlight: #aaa39d; /* Warm Gray → subtle highlights */
+}
+
+/* Profile container */
 .profile-container {
   padding: 40px 20px;
-  background-color: #f9fafb;
+  background-color: var(--color-accent);
   max-width: 600px;
   margin: 0 auto;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   text-align: center;
+  color: var(--color-text);
 }
 
-
-/* Center profile details */
+/* Profile details */
 .profile-details {
   max-width: 500px;
   margin: 0 auto;
@@ -17,35 +26,36 @@
 
 /* Profile Info Styling */
 .profile-info {
-  background-color: #f4f4f4;
+  background-color: var(--color-secondary);
   padding: 20px;
   border-radius: 8px;
+  color: var(--color-text);
 }
 
 .profile-info p {
   font-size: 16px;
   margin: 10px 0;
-  color: black;
 }
 
-/* Logout button styling */
+/* Logout button */
 .logout-btn {
   margin-top: 20px;
   padding: 10px 20px;
   font-weight: bold;
   border: none;
-  background-color: #ef4444;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--color-text);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .logout-btn:hover {
-  background-color: #b91c1c;
+  background-color: var(--color-highlight);
+  color: var(--color-primary);
 }
 
-/* Center booked places section */
+/* Booked places container */
 .booked-places {
   width: 100vw;
   padding: 40px 20px;
@@ -53,17 +63,17 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center;        /* Center horizontally */
-  justify-content: center;    /* Center vertically */
+  align-items: center;
+  justify-content: center;
   text-align: center;
 }
 
-/* Heading for booked places */
+/* Heading */
 .booked-places h3 {
   text-align: center;
   margin-bottom: 30px;
   font-size: 28px;
-  color: #1f2937;
+  color: var(--color-primary);
 }
 
 /* Button Styling */
@@ -72,9 +82,8 @@
   padding: 12px 24px;
   font-size: 18px;
   font-weight: 600;
- 
-  background-color: #0398ace4;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--color-text);
   border: none;
   border-radius: 12px;
   cursor: pointer;
@@ -82,38 +91,40 @@
 }
 
 .booked-places button:hover {
-  background-color: #028b9e;
+  background-color: var(--color-highlight);
+  color: var(--color-primary);
   transform: scale(1.05);
 }
 
-/* Bookings list with flexbox */
+/* Bookings list */
 .bookings-list {
-display: flex;
-flex-direction: row;
-flex-wrap: nowrap;
-gap: 24px;
-overflow-x: auto;
-list-style: none;
-scroll-snap-type: x mandatory;
-max-width: 90vw;
-padding-bottom: 10px;
-justify-content: center; /* Center the list horizontally */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 24px;
+  overflow-x: auto;
+  list-style: none;
+  scroll-snap-type: x mandatory;
+  max-width: 90vw;
+  padding-bottom: 10px;
+  justify-content: center;
 }
 
-/* Booking card styling */
+/* Booking card */
 .booking-card {
-width: 400px;
-min-width: 400px;           /* Prevent shrinking below 400px */
-flex-shrink: 0;             /* Prevent flexbox from shrinking the card */
-background-color: #fff;
-border-radius: 16px;
-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-padding: 16px;
-display: flex;
-flex-direction: column;
-align-items: center;
-transition: transform 0.2s ease;
-scroll-snap-align: start;   /* Optional: for smooth snapping */
+  width: 400px;
+  min-width: 400px;
+  flex-shrink: 0;
+  background-color: var(--color-accent);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s ease;
+  scroll-snap-align: start;
+  color: var(--color-primary);
 }
 
 .booking-card:hover {
@@ -121,7 +132,7 @@ scroll-snap-align: start;   /* Optional: for smooth snapping */
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
-/* Booking image styling */
+/* Booking image */
 .booking-image {
   width: 100%;
   height: 200px;
@@ -130,7 +141,7 @@ scroll-snap-align: start;   /* Optional: for smooth snapping */
   margin-bottom: 16px;
 }
 
-/* Booking details styling */
+/* Booking details */
 .booking-details {
   width: 100%;
   text-align: left;
@@ -139,6 +150,6 @@ scroll-snap-align: start;   /* Optional: for smooth snapping */
 .booking-details p {
   margin: 8px 0;
   font-size: 15px;
-  color: #2c3e50;
+  color: var(--color-secondary);
   line-height: 1.4;
 }

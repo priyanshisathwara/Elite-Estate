@@ -20,17 +20,6 @@ const Sections = () => {
                 </div>
             </section>
 
-            {/* Why Choose */}
-            <section className="why-choose fade-in">
-                <h2>Why Choose Elite Estate?</h2>
-                <ul>
-                    <li>✅ Verified Listings</li>
-                    <li>✅ Secure Payments</li>
-                    <li>✅ 24/7 Support</li>
-                    <li>✅ Expert Guidance</li>
-                </ul>
-            </section>
-
             {/* How It Works */}
             <section className="how-it-works fade-in">
                 <h2>How It Works</h2>

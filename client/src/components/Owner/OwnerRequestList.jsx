@@ -26,7 +26,6 @@ const OwnerRequestList = () => {
     }
   };
 
-
   const fetchOwnerPlaces = async () => {
     try {
       const response = await axios.get('http://localhost:8000/api/admin/owner-places', {
@@ -49,7 +48,6 @@ const OwnerRequestList = () => {
     if (!confirmDelete) return;
 
     try {
-      const token = localStorage.getItem('token');
       await axios.delete(`http://localhost:8000/api/admin/places/${placeId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -57,14 +55,12 @@ const OwnerRequestList = () => {
       });
 
       toast.success("Property deleted successfully.");
-      // Refresh the list
       fetchOwnerPlaces();
     } catch (error) {
       console.error("Delete error:", error);
       toast.error("Failed to delete property.");
     }
   };
-
 
   return (
     <div className="owner-places-container">
@@ -74,42 +70,51 @@ const OwnerRequestList = () => {
         <p>No properties found.</p>
       ) : (
         <div className="places-grid">
-          {places.map((place) => (
-            <div key={place.id} className="place-card">
-              <img
-                src={`http://localhost:8000/uploads/${place.image}`}
-                alt={place.place_name}
-                className="place-image"
-              />
-              <h3>{place.place_name}</h3>
+          {places.map((place) => {
+            let images = [];
+            try {
+              images = JSON.parse(place.image); // parse string → array
+            } catch (e) {
+              console.error("Image parse error:", e);
+            }
 
-              {/* Status */}
-              <div className="property-status">
-                Status: <span className={`status-label ${getStatus(place.is_approved).toLowerCase()}`}>
-                  {getStatus(place.is_approved)}
-                </span>
-              </div>
-
-
-              <p>Location: {place.city}</p>
-              <p>Price: ₹{place.price} /night</p>
-              <div className="actions-container">
-                {place.is_approved === 1 && (
-                  <Link to={`/update-place/${place.id}`} className="update-btn">
-                    Update Place
-                  </Link>
+            return (
+              <div key={place.id} className="place-card">
+                {images.length > 0 && (
+                  <img
+                    src={`http://localhost:8000/uploads/${images[0]}`}
+                    alt={place.place_name}
+                    className="place-image"
+                  />
                 )}
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDelete(place.id)}
-                >
-                  Delete
-                </button>
+                <h3>{place.place_name}</h3>
+
+                <div className="property-status">
+                  Status:{" "}
+                  <span className={`status-label ${getStatus(place.is_approved).toLowerCase()}`}>
+                    {getStatus(place.is_approved)}
+                  </span>
+                </div>
+
+                <p>Location: {place.city}</p>
+                <p>Price: ₹{place.price} /night</p>
+
+                <div className="actions-container">
+                  {place.is_approved === 1 && (
+                    <Link to={`/update-place/${place.id}`} className="update-btn">
+                      Update Place
+                    </Link>
+                  )}
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDelete(place.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-
-
-            </div>
-          ))}
+            );
+          })}
           <ToastContainer />
         </div>
       )}

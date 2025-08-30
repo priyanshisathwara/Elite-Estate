@@ -4,6 +4,7 @@ import express from "express";
 
 const app = express();
 app.use(express.json());
+
 export const createPlace = (req, res) => {
   try {
     console.log("Files received:", req.files); // Debugging

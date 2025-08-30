@@ -291,42 +291,116 @@ export const getBookingsForAdmin = (req, res) => {
 
 
 
-export const updatePlace = async (req, res) => {
+export const updatePlace = (req, res) => {
   const { id } = req.params;
-  const { placeName, price, location, city, is_approved = 0 } = req.body;
-  const userId = req.user?.id;
-  const image = req.file?.filename; 
 
-  const checkPlaceQuery = 'SELECT * FROM places WHERE id = ?';
+  const {
+    place_name,
+    location,
+    city,
+    price,
+    description,
+    property_type,
+    bedrooms,
+    bathrooms,
+    area_sqft,
+    furnished,
+    amenities,
+    contact_number,
+    listing_type,
+    is_approved = 0
+  } = req.body;
+
+  const owner = req.user.name;
+  const role = req.user.role;
+
+  // ✅ Only owners can update their properties
+  if (role !== "owner") {
+    return res.status(403).json({ error: "Access denied. Only owners can update properties." });
+  }
+
+  // Extract multiple images if uploaded
+  const images = req.files ? req.files.map(file => file.filename) : [];
+
+  const checkPlaceQuery = "SELECT * FROM places WHERE id = ?";
 
   db.query(checkPlaceQuery, [id], (err, results) => {
-    if (err) return res.status(500).json({ error: 'Failed to fetch place details' });
-
-    if (results.length === 0) return res.status(404).json({ message: 'Place not found' });
-
-    const place = results[0];
-    if (place.owner_id !== userId) return res.status(403).json({ message: 'Unauthorized' });
-
-    let updateQuery = `
-      UPDATE places
-      SET place_name = ?, location = ?, price = ?, city = ?, is_approved = ?
-    `;
-    const updateValues = [placeName, location, price, city, is_approved];
-
-    if (image) {
-      updateQuery += `, image = ?`;
-      updateValues.push(image);
+    if (err) {
+      console.error("DB Fetch Error:", err);
+      return res.status(500).json({ error: "Failed to fetch place details" });
     }
 
-    updateQuery += ` WHERE id = ?`;
-    updateValues.push(id);
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Place not found" });
+    }
+
+    const place = results[0];
+
+    // ✅ Ensure same owner is updating
+    if (place.owner_name !== owner) {
+      return res.status(403).json({ message: "Unauthorized: You are not the owner of this place" });
+    }
+
+    // ✅ If new images uploaded, overwrite; else keep existing
+    const finalImages =
+      images.length > 0 ? JSON.stringify(images) : place.image;
+
+    const updateQuery = `
+      UPDATE places
+      SET 
+        place_name = ?, 
+        location = ?, 
+        price = ?, 
+        city = ?, 
+        description = ?, 
+        property_type = ?, 
+        bedrooms = ?, 
+        bathrooms = ?, 
+        area_sqft = ?, 
+        furnished = ?, 
+        amenities = ?, 
+        contact_number = ?, 
+        listing_type = ?, 
+        image = ?, 
+        is_approved = ?, 
+        updated_at = NOW()
+      WHERE id = ?
+    `;
+
+    const updateValues = [
+      place_name || place.place_name,
+      location || place.location,
+      price || place.price,
+      city || place.city,
+      description || place.description,
+      property_type || place.property_type,
+      bedrooms || place.bedrooms,
+      bathrooms || place.bathrooms,
+      area_sqft || place.area_sqft,
+      furnished || place.furnished,
+      amenities ? JSON.stringify(amenities) : place.amenities,
+      contact_number || place.contact_number,
+      listing_type || place.listing_type,
+      finalImages,
+      is_approved,
+      id,
+    ];
 
     db.query(updateQuery, updateValues, (err, result) => {
-      if (err) return res.status(500).json({ error: 'Failed to update place' });
-      res.status(200).json({ message: 'Place update request submitted for approval' });
+      if (err) {
+        console.error("DB Update Error:", err);
+        return res.status(500).json({ error: "Failed to update place" });
+      }
+
+      return res.status(200).json({
+        message: "Place updated successfully (pending approval)",
+        placeId: id,
+        images: images.length > 0 ? images.map(img => `/uploads/${img}`) : JSON.parse(place.image),
+      });
     });
   });
 };
+
 
 export const deletePlace = (req, res) => {
   const { id } = req.params;
@@ -365,26 +439,49 @@ export const getBookingsByUser = (req, res) => {
 
   const sql = `
     SELECT 
-      bookings.id, 
-      bookings.place_id, 
-      bookings.check_in_date, 
-      bookings.check_out_date, 
-      bookings.guests, 
-      bookings.created_at, 
-      places.place_name, 
-      places.price, 
-      places.image 
-    FROM bookings 
-    JOIN places ON bookings.place_id = places.id 
-    WHERE bookings.userName = ?
+      b.id AS booking_id, 
+      b.place_id, 
+      b.user_name, 
+      b.user_email, 
+      b.user_phone, 
+      b.transaction_type,
+      b.action_type,
+      b.start_date,
+      b.end_date, 
+      b.status,
+      b.booking_date, 
+      p.place_name, 
+      p.price, 
+      p.image 
+    FROM bookings b
+    JOIN places p ON b.place_id = p.id
+    WHERE b.user_name = ?
+    ORDER BY b.booking_date DESC
   `;
 
   db.query(sql, [userName], (err, results) => {
     if (err) {
-      console.error('Failed to fetch user bookings:', err);
-      return res.status(500).json({ error: 'Failed to fetch bookings' });
+      console.error("Failed to fetch user bookings:", err);
+      return res.status(500).json({ error: "Failed to fetch bookings" });
     }
 
-    res.status(200).json(results);
+    // ✅ Parse image array and keep only first image
+    const bookingsWithFirstImage = results.map(row => {
+      let firstImage = null;
+      try {
+        const images = row.image ? JSON.parse(row.image) : [];
+        if (images.length > 0) {
+          firstImage = `http://localhost:8000/uploads/${images[0]}`;
+        }
+      } catch (e) {
+        console.error("Image parsing error in backend:", e);
+      }
+      return {
+        ...row,
+        image: firstImage
+      };
+    });
+
+    res.status(200).json(bookingsWithFirstImage);
   });
 };
