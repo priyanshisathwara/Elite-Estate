@@ -319,8 +319,8 @@ export const updatePlace = (req, res) => {
     return res.status(403).json({ error: "Access denied. Only owners can update properties." });
   }
 
-  // Extract multiple images if uploaded
-  const images = req.files ? req.files.map(file => file.filename) : [];
+const images = req.files ? req.files.map(file => file.filename) : [];
+
 
   const checkPlaceQuery = "SELECT * FROM places WHERE id = ?";
 

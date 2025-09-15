@@ -3,6 +3,10 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import "./PlacesList.css";
 import SearchBar from "./SearchBar";
+import { useNavigate } from "react-router-dom";
+
+
+
 
 const PlacesList = () => {
   const [places, setPlaces] = useState([]);
@@ -10,6 +14,7 @@ const PlacesList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem("user");
@@ -62,37 +67,43 @@ const PlacesList = () => {
 
             return (
               <div key={place.id} className="card">
-                {/* Entire card is clickable → navigates to details */}
-                <Link to={`/placedetails/${place.id}`} className="card-link">
+                {/* Display image */}
+                {images.length > 0 && (
+                  <img
+                    src={`http://localhost:8000/uploads/${images[0]}`}
+                    alt={place.place_name}
+                    className="card-image"
+                  />
+                )}
 
-                  {images.length > 0 && (
-                    <img
-                      src={`http://localhost:8000/uploads/${images[0]}`}
-                      alt={place.place_name}
-                      className="card-image"
-                    />
-                  )}
-                  <div className="card-content">
-                    <h3>{place.place_name}</h3>
-                    <p>
-                      <strong>City:</strong> {place.city}
-                    </p>
-                    <p>
-                      <strong>Price:</strong> ₹{place.price}
-                    </p>
-                  </div>
-                </Link>
+                {/* Card content */}
+                <div className="card-content">
+                  <h3>{place.place_name}</h3>
+                  <p>
+                    <strong>City:</strong> {place.city}
+                  </p>
+                  <p>
+                    <strong>Price:</strong> ₹{place.price}
+                  </p>
+                  <p>
+                    <strong>Property Type:</strong> {place.property_type || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Listing Type:</strong> {place.listing_type || "N/A"}
+                  </p>
+                </div>
 
-                {/* Keep Book Now button separate */}
+                {/* Button for navigation */}
                 <div className="card-buttons">
                   <button
                     className="book-now-btn"
-                    onClick={() => navigate(`/book-now/${place.id}`)} >
-                    Book Now
+                    onClick={() => navigate(`/placedetails/${place.id}`)}
+                  >
+                    View More
                   </button>
-
                 </div>
               </div>
+
             );
           })}
         </div>

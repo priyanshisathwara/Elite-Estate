@@ -26,6 +26,7 @@ import "./app.css";
 import PlaceDetail from './components/PlaceDetail';
 import RentForm from './components/RentForm';
 import Sections from './components/Sections';
+import ViMi from './components/ViMi';
 
 function App() {
 
@@ -59,6 +60,8 @@ function App() {
     <Route path="/city/:city" element={<CityResult />} />
      <Route path="/rent/:id" element={<RentForm />} /> 
      <Route path="/section" element={<Sections />} /> 
+     <Route path="/vimi" element={<ViMi />} /> 
+
 
   
    </Routes>

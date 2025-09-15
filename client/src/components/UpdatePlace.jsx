@@ -135,7 +135,7 @@ export default function UpdatePlace() {
 
     try {
       const response = await axios.put(
-        `http://localhost:8000/api/admin/update-place/${id}`,
+        `http://localhost:8000/api/admin/update-place/${id}`,   // ✅ singular "place"
         formDataToSend,
         {
           headers: {
@@ -144,6 +144,7 @@ export default function UpdatePlace() {
           },
         }
       );
+
 
       if (response.status === 200) {
         toast.success("Place updated successfully! Wait for admin approval.");

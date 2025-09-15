@@ -1,71 +1,75 @@
 .footer {
   background-color: var(--color-primary);
   color: var(--color-text);
-  padding: 60px 20px;
+  padding: 40px 20px; /* reduced padding */
   font-family: 'Poppins', sans-serif;
 }
 
 .footer-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
+  max-width: 1200px; /* slightly smaller for balance */
+  margin: 0 auto;
+  padding: 10px;
+  text-align: center;
 }
 
 .footer-main {
   display: flex;
-  gap: 40px;
+  gap: 20px; /* reduced gap */
   flex-wrap: wrap;
+  justify-content: space-between; /* better spacing distribution */
 }
 
 /* Left Section - Details */
 .footer-details {
-  flex: 1 1 600px; /* wider left section */
+  flex: 1 1 600px;
   display: flex;
   flex-direction: column;
-  gap: 30px; /* space between header, columns, social */
+  gap: 20px; /* reduced space */
 }
 
 .footer-details > h2 {
-  font-size: 28px;
-  font-weight: bold;
-  margin-bottom: 20px;
+  font-size: 24px; /* slightly smaller */
+  font-weight: 600;
+  margin-bottom: 10px; /* reduced */
   color: var(--color-accent);
 }
 
 /* Contact & Office Hours Columns */
 .footer-details-horizontal {
   display: flex;
-  gap: 60px; /* space between columns */
+  gap: 40px; /* reduced */
   flex-wrap: wrap;
 }
 
 .footer-column {
-  flex: 1 1 250px; /* responsive width for each column */
+  flex: 1 1 220px;
 }
 
 .footer-column h4 {
   color: var(--color-secondary);
-  margin-bottom: 5px;
+  margin-bottom: 6px; /* reduced */
+  font-size: 1rem;
 }
 
 .footer-column p {
-  margin: 5px 0;
-  line-height: 1.6;
+  margin: 3px 0; /* reduced */
+  line-height: 1.4; /* tighter lines */
+  font-size: 0.95rem;
 }
 
 /* Social icons */
 .footer-social-heading {
   text-align: center;
-  margin: 0;
+  margin: 10px 0 5px; /* compacted */
   color: var(--color-secondary);
+  font-size: 1rem;
 }
 
 .footer-social {
   display: flex;
   justify-content: center;
-  gap: 15px; /* spacing between icons */
-  margin-top: 5px;
+  gap: 12px; /* reduced */
+  margin-top: 0;
 }
 
 .footer-social .social-icon {
@@ -73,9 +77,9 @@
   align-items: center;
   justify-content: center;
   color: var(--color-text);
-  font-size: 1.2rem;
-  width: 40px;
-  height: 40px;
+  font-size: 1rem;
+  width: 35px;
+  height: 35px;
   border: 1px solid var(--color-text);
   border-radius: 50%;
   transition: all 0.3s ease;
@@ -88,26 +92,18 @@
   transform: scale(1.1);
 }
 
-/* Footer Copy */
-.footer-copy {
-  text-align: center;
-  font-size: 0.9rem;
-  color: var(--color-highlight);
-  margin-top: 40px;
-}
-
-/* Footer Links - Privacy & Terms */
+/* Footer Links */
 .footer-links {
   display: flex;
-  justify-content: center; /* center horizontally */
-  gap: 20px;               /* space between links */
-  margin-top: 15px;        /* spacing from social icons */
+  justify-content: center;
+  gap: 15px; /* smaller spacing */
+  margin-top: 10px;
 }
 
 .footer-link {
   color: var(--color-highlight);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem; /* compact */
   transition: color 0.3s ease;
 }
 
@@ -116,16 +112,23 @@
   text-decoration: underline;
 }
 
+/* Footer Copy */
+.footer-copy {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--color-highlight);
+  margin-top: 25px; /* reduced */
+}
 
 /* Responsive */
 @media (max-width: 1024px) {
   .footer-main {
     flex-direction: column;
-    gap: 30px;
+    gap: 20px;
   }
 
   .footer-details-horizontal {
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
   }
 }

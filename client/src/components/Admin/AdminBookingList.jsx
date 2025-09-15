@@ -60,6 +60,7 @@ const AdminBookingList = () => {
                             <th>Place</th>
                             <th>Check-In</th>
                             <th>Check-Out</th>
+                            <th>Action Type</th> 
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -72,6 +73,7 @@ const AdminBookingList = () => {
                                 <td>{booking.place_id}</td>
                                 <td>{booking.start_date}</td>
                                 <td>{booking.end_date}</td>
+                                <td>{booking.action_type}</td> 
                                 <td className={`status ${booking.status.toLowerCase()}`}>
                                     {booking.status}
                                 </td>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import './OwnerRequestList.css'; 
+import './OwnerRequestList.css';
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -97,7 +97,10 @@ const OwnerRequestList = () => {
                 </div>
 
                 <p>Location: {place.city}</p>
-                <p>Price: ₹{place.price} /night</p>
+                <p>Price: ₹{place.price} </p>
+
+                {/* ✅ Add listing type here */}
+                <p>Listing Type: {place.listing_type}</p>
 
                 <div className="actions-container">
                   {place.is_approved === 1 && (
@@ -113,6 +116,7 @@ const OwnerRequestList = () => {
                   </button>
                 </div>
               </div>
+
             );
           })}
           <ToastContainer />

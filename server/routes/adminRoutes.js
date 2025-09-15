@@ -23,7 +23,13 @@ router.post('/get_request', getPlacedForAdminApproval);
 router.put('/update_request_status', updatePlaceApplication);
 router.get('/places/:id', placeResult);
 router.post('/bookings', createBooking);
-router.post('/update-places/:id', verifyUser, upload.single('image'), updatePlace);
+router.put(
+  "/update-place/:id",
+  verifyUser,
+  upload.array("images", 5),   // handle multiple images
+  updatePlace
+);
+
 router.get('/owner-places', verifyUser, getPlacesForOwner);
 router.delete('/places/:id', verifyUser, deletePlace);
 router.get('/bookings/user/:userName', getBookingsByUser);

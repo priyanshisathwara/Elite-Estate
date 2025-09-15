@@ -1,63 +1,65 @@
 import React from "react";
 import "./Sections.css";
-import { Link } from "react-router-dom";
+import { FaHandshake, FaBuilding, FaUsers, FaShieldAlt } from "react-icons/fa";
 
 const Sections = () => {
-    return (
-        <div className="sections">
+  return (
+    <div className="sections fade-in">
+      {/* Intro */}
+      <section className="intro">
+        <h2>Elite Estate – Redefining the Art of Living</h2>
+        <p>
+          At Elite Estate, we don’t just sell properties—we help you discover
+          spaces that reflect your lifestyle, ambitions, and dreams. With years
+          of expertise, we blend innovation, trust, and quality to redefine
+          modern real estate for our valued clients.
+        </p>
+      </section>
 
-            {/* Categories */}
-            <section className="categories fade-in">
-                <h2>Explore by Category</h2>
-                <div className="category-cards">
-                    <div className="card">🏠 Apartments</div>
-                    <div className="card">🏡 Villas</div>
-                    <div className="card">🏠 House</div>
-                    <div className="card">🌿 Plot</div>
-                    <div className="card">🏢 Commercial</div>
+      {/* What We Offer */}
+      <section className="offers">
+        <h3>What We Offer</h3>
+        <div className="offers-grid">
+          <div className="offer-card">
+            <FaBuilding className="offer-icon" />
+            <h4>Premium Properties</h4>
+            <p>
+              Handpicked residential and commercial spaces that define elegance,
+              comfort, and value.
+            </p>
+          </div>
 
+          <div className="offer-card">
+            <FaHandshake className="offer-icon" />
+            <h4>Trusted Partnerships</h4>
+            <p>
+              Transparent dealings and long-term relationships built on trust
+              and reliability.
+            </p>
+          </div>
 
-                </div>
-            </section>
+          <div className="offer-card">
+            <FaUsers className="offer-icon" />
+            <h4>Client-Centric Approach</h4>
+            <p>
+              Tailored real estate solutions designed around your needs and
+              aspirations.
+            </p>
+          </div>
 
-            {/* How It Works */}
-            <section className="how-it-works fade-in">
-                <h2>How It Works</h2>
-                <div className="steps">
-                    <div className="step">🔍 Search Properties</div>
-                    <div className="step">📅 Schedule Visit</div>
-                    <div className="step">🏡 Book & Move In</div>
-                </div>
-            </section>
-
-            {/* Testimonials */}
-            <section className="testimonials fade-in">
-                <h2>What Our Clients Say</h2>
-                <div className="reviews">
-                    <div className="review">
-                        <p>"Elite Estate made finding my dream villa so easy!"</p>
-                        <span>⭐⭐⭐⭐⭐</span>
-                        <h4>- Aditi, Mumbai</h4>
-                    </div>
-                    <div className="review">
-                        <p>"Smooth process and great support. Highly recommended."</p>
-                        <span>⭐⭐⭐⭐⭐</span>
-                        <h4>- Rohan, Delhi</h4>
-                    </div>
-                </div>
-            </section>
-
-            {/* Call to Action */}
-            <section className="cta fade-in">
-                <h2>Find Your Dream Home Today</h2>
-
-                <Link to="/places" className="cta-btn">
-                    Start Searching Now
-                </Link>
-            </section>
-
+          <div className="offer-card">
+            <FaShieldAlt className="offer-icon" />
+            <h4>Safe Investments</h4>
+            <p>
+              Secure, future-ready projects that ensure your investments grow
+              with confidence.
+            </p>
+          </div>
         </div>
-    );
+      </section>
+      
+    </div>
+  );
 };
 
 export default Sections;

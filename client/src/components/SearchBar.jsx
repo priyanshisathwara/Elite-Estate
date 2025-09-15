@@ -9,12 +9,13 @@ export default function SearchBar() {
     const [propertyType, setPropertyType] = useState("");
     const [minPrice, setMinPrice] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
+    const [listingType, setListingType] = useState(""); // Buy or Rent
     const [searchData, setSearchData] = useState([]);
     const navigate = useNavigate();
 
-    // 🟢 Auto search with debounce
+    // Auto search with debounce
     useEffect(() => {
-        if (!city && !propertyType && !minPrice && !maxPrice) {
+        if (!city && !propertyType && !minPrice && !maxPrice && !listingType) {
             setSearchData([]);
             return;
         }
@@ -24,7 +25,8 @@ export default function SearchBar() {
                 city,
                 property_type: propertyType,
                 minPrice: minPrice || null,
-                maxPrice: maxPrice || null
+                maxPrice: maxPrice || null,
+                listing_type: listingType || null
             })
             .then((res) => {
                 setSearchData(res.data || []);
@@ -33,16 +35,17 @@ export default function SearchBar() {
                 console.error("Error fetching search results:", err);
                 setSearchData([]);
             });
-        }, 500); // wait 500ms after user stops typing
+        }, 500);
 
         return () => clearTimeout(delayDebounce);
-    }, [city, propertyType, minPrice, maxPrice]);
+    }, [city, propertyType, minPrice, maxPrice, listingType]);
 
     const handleClose = () => {
         setCity("");
         setPropertyType("");
         setMinPrice("");
         setMaxPrice("");
+        setListingType("");
         setSearchData([]);
     };
 
@@ -84,8 +87,30 @@ export default function SearchBar() {
                         onChange={(e) => setMaxPrice(e.target.value)}
                     />
 
+                    {/* ✅ Listing Type - Buy or Rent */}
+                    <div className="listing-type">
+                        <label>
+                            <input
+                                type="radio"
+                                name="listingType"
+                                value="buy"
+                                checked={listingType === "buy"}
+                                onChange={(e) => setListingType(e.target.value)}
+                            /> Buy
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="listingType"
+                                value="rent"
+                                checked={listingType === "rent"}
+                                onChange={(e) => setListingType(e.target.value)}
+                            /> Rent
+                        </label>
+                    </div>
+
                     <div className='search-icon'>
-                        {(!city && !propertyType && !minPrice && !maxPrice) ? (
+                        {(!city && !propertyType && !minPrice && !maxPrice && !listingType) ? (
                             <AiOutlineSearch size={24} color="#FFFFFF" />
                         ) : (
                             <AiOutlineClose size={24} color="#FFFFFF" onClick={handleClose} />
@@ -101,7 +126,7 @@ export default function SearchBar() {
                                 onClick={() => handleItemClick(place)}
                                 className="search-suggestion-line"
                             >
-                                <strong>{place.city}</strong> | {place.property_type}
+                                <strong>{place.city}</strong> | {place.property_type} | {place.listing_type}
                                 <span style={{ float: "right", fontWeight: "bold" }}>
                                     ₹{place.price}
                                 </span>

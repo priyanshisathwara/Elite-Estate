@@ -230,7 +230,7 @@ export const resetPassword = async (req, res) => {
 };
 
 export const searchData = async (req, res) => {
-  const { city, property_type, minPrice, maxPrice } = req.body;
+  const { city, property_type, minPrice, maxPrice, listing_type } = req.body;
 
   let sql = "SELECT * FROM places WHERE 1=1";
   const params = [];
@@ -242,6 +242,10 @@ export const searchData = async (req, res) => {
   if (property_type) {
     sql += " AND LOWER(property_type) LIKE ?";
     params.push(`%${property_type.toLowerCase()}%`);
+  }
+  if (listing_type) {
+    sql += " AND LOWER(listing_type) = ?";
+    params.push(listing_type.toLowerCase());
   }
   if (minPrice && maxPrice) {
     sql += " AND price BETWEEN ? AND ?";
@@ -255,7 +259,6 @@ export const searchData = async (req, res) => {
     return res.status(200).json(results || []);
   });
 };
-
 
 
 export const cityResult = async (req, res) => {

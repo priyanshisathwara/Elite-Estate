@@ -77,10 +77,25 @@ const AdminRequestList = () => {
   return (
     <div className="admin-request-container">
       <div className="filter-buttons">
-        <button onClick={handleFetchAllRequests}>All Requests</button>
-        <button onClick={handleFetchRejected}>Rejected</button>
-        <button onClick={handleFetchApproved}>Approved</button>
+        <button
+          onClick={handleFetchAllRequests}
+          className={statusFilter === 0 ? 'active' : ''} >
+          All Requests
+        </button>
+
+        <button
+          onClick={handleFetchRejected}
+          className={statusFilter === 2 ? 'active' : ''} >
+          Rejected
+        </button>
+
+        <button
+          onClick={handleFetchApproved}
+          className={statusFilter === 1 ? 'active' : ''}>
+          Approved
+        </button>
       </div>
+
 
       {loading ? <p>Loading...</p> : error ? <p>{error}</p> :
         <div>
