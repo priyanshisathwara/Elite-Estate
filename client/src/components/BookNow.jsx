@@ -50,14 +50,22 @@ const BookNow = () => {
         setPlace(placeData);
       } catch (error) {
         console.error('Error fetching place data:', error);
+        toast.error("Failed to fetch property details.");
+        navigate("/places");
       }
     };
     fetchPlaceData();
-  }, [id]);
+  }, [id, navigate]);
 
   // Handle form submission
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    // Prevent submitting if already sold
+    if (actionType === "Buy" && place.status === "Sold") {
+      toast.error("This property has already been bought!");
+      return;
+    }
 
     if (!userName.trim()) {
       toast.error('Please enter your name.');
@@ -92,7 +100,7 @@ const BookNow = () => {
       const response = await axios.post('http://localhost:8000/api/admin/bookings', requestData);
       console.log('Booking response:', response.data);
       setBookingConfirmed(true);
-      toast.success(`Booking Request Created for ${userName}!`);
+      toast.success(`${actionType === "Rent" ? "Booking" : "Purchase"} request created for ${userName}!`);
     } catch (error) {
       console.error('Booking failed:', error);
       toast.error('Booking failed. Please try again.');
@@ -100,6 +108,19 @@ const BookNow = () => {
   };
 
   if (!place) return <p>Loading place details...</p>;
+
+  // Show sold message immediately for Buy
+  if (actionType === "Buy" && place.status === "Sold") {
+    return (
+      <section className="book-now-container">
+        <div className="booking-confirmation">
+          <h2>This property has already been bought!</h2>
+          <p>You cannot purchase it again.</p>
+          <button onClick={() => navigate("/places")}>Back to Places</button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="book-now-container">
@@ -171,7 +192,6 @@ const BookNow = () => {
             <option value="Cash">Cash</option>
           </select>
 
-          {/* Dates shown only for Rent */}
           {actionType === "Rent" && (
             <>
               <label htmlFor="start-date">Start Date</label>

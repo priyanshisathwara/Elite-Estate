@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 
 export default function AddPlace() {
   const navigate = useNavigate();
-  const [imageFiles, setImageFiles] = useState([]); 
-  const [previewUrls, setPreviewUrls] = useState([]); 
+  const [imageFiles, setImageFiles] = useState([]);
+  const [previewUrls, setPreviewUrls] = useState([]);
   const [formData, setFormData] = useState({
     place_name: '',
     location: '',
@@ -21,16 +21,17 @@ export default function AddPlace() {
     furnished: 'No',
     amenities: '',
     contact_number: '',
-    listing_type: 'Sell'
+    listing_type: 'Sell',
+    status: 'Available'
   });
 
   const [ownerName, setOwnerName] = useState("");
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user"); 
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      const user = JSON.parse(storedUser); 
-      setOwnerName(user.name); 
+      const user = JSON.parse(storedUser);
+      setOwnerName(user.name);
     } else {
       setOwnerName("Guest");
     }
@@ -40,8 +41,8 @@ export default function AddPlace() {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: (name === "price" || name === "bedrooms" || name === "bathrooms" || name === "area_sqft") 
-        ? Number(value) 
+      [name]: (name === "price" || name === "bedrooms" || name === "bathrooms" || name === "area_sqft")
+        ? Number(value)
         : value
     });
   };
@@ -104,7 +105,8 @@ export default function AddPlace() {
           furnished: 'No',
           amenities: '',
           contact_number: '',
-          listing_type: 'Sell'
+          listing_type: 'Sell',
+          status: 'Available'
         });
         setImageFiles([]);
         setPreviewUrls([]);
@@ -210,6 +212,16 @@ export default function AddPlace() {
               <option value="Rent">Rent</option>
             </select>
           </div>
+
+          <div className="form-group">
+            <label htmlFor="status">Status</label>
+            <select id="status" name="status" value={formData.status} onChange={handleChange}>
+              <option value="Available">Available</option>
+              <option value="Sold">Already Bought</option>
+              <option value="Upcoming">Upcoming Project</option>
+            </select>
+          </div>
+
 
           {/* Upload Images */}
           <div className="form-group">

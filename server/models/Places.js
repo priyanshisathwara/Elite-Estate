@@ -23,7 +23,8 @@ export const createPlace = (req, res) => {
       furnished,
       amenities, // Expecting JSON or array from frontend
       contact_number,
-      listing_type
+      listing_type,
+      status
     } = req.body;
 
     const owner = req.user.name;
@@ -47,7 +48,7 @@ export const createPlace = (req, res) => {
       INSERT INTO places (
         is_approved, place_name, location, price, city, owner_name, image, description,
         property_type, bedrooms, bathrooms, area_sqft, furnished, amenities,
-        contact_number, listing_type, created_at, updated_at
+        contact_number, listing_type,status, created_at, updated_at
       )
       VALUES (
         false, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW()
@@ -71,7 +72,8 @@ export const createPlace = (req, res) => {
         furnished || null,
         amenities ? JSON.stringify(amenities) : null, // store JSON
         contact_number || null,
-        listing_type || "Sell"
+        listing_type || "Sell",
+        status || "Available"
       ],
       (err, result) => {
         if (err) {
@@ -84,7 +86,8 @@ export const createPlace = (req, res) => {
           placeId: result.insertId,
           images: images.map(img => `/uploads/${img}`),
           price: price || null,
-          listing_type: listing_type || "Sell"
+          listing_type: listing_type || "Sell",
+           status: status || "Available"
         });
       }
     );

@@ -230,32 +230,64 @@ export const resetPassword = async (req, res) => {
 };
 
 export const searchData = async (req, res) => {
-  const { city, property_type, minPrice, maxPrice, listing_type } = req.body;
+  const { city, property_type, minPrice, maxPrice, listing_type, days } = req.body;
 
   let sql = "SELECT * FROM places WHERE 1=1";
   const params = [];
 
+  // Filter by city
   if (city) {
     sql += " AND LOWER(city) LIKE ?";
     params.push(`%${city.toLowerCase()}%`);
   }
+
+  // Filter by property type
   if (property_type) {
     sql += " AND LOWER(property_type) LIKE ?";
     params.push(`%${property_type.toLowerCase()}%`);
   }
+
+  // Filter by listing type (Rent / Buy)
   if (listing_type) {
     sql += " AND LOWER(listing_type) = ?";
     params.push(listing_type.toLowerCase());
   }
+
+  // Filter by price range
   if (minPrice && maxPrice) {
     sql += " AND price BETWEEN ? AND ?";
     params.push(minPrice, maxPrice);
   }
 
+  // ✅ New: Filter by days (only for rent listings)
+  if (days && listing_type && listing_type.toLowerCase() === "rent") {
+    const stayDays = Number(days);
+    if (isNaN(stayDays) || stayDays <= 0) {
+      return res.status(400).json({ message: "Invalid number of days" });
+    }
+
+    const today = new Date();
+    const endDate = new Date();
+    endDate.setDate(today.getDate() + stayDays);
+
+    // Convert to MySQL date format (YYYY-MM-DD)
+    const startStr = today.toISOString().split("T")[0];
+    const endStr = endDate.toISOString().split("T")[0];
+
+    // Filter only those rent properties that are not booked in this date range
+    sql += ` AND id NOT IN (
+      SELECT place_id FROM bookings
+      WHERE NOT (end_date < ? OR start_date > ?)
+    )`;
+    params.push(startStr, endStr);
+  }
+
   db.query(sql, params, (err, results) => {
     if (err) {
+      console.error("Error executing search query:", err);
       return res.status(500).json({ error: "Database query failed", details: err.message });
     }
+
     return res.status(200).json(results || []);
   });
 };

@@ -10,12 +10,13 @@ export default function SearchBar() {
     const [minPrice, setMinPrice] = useState("");
     const [maxPrice, setMaxPrice] = useState("");
     const [listingType, setListingType] = useState(""); // Buy or Rent
+    const [days, setDays] = useState(""); // ✅ New state for number of days
     const [searchData, setSearchData] = useState([]);
     const navigate = useNavigate();
 
-    // Auto search with debounce
+    // ✅ Auto search with debounce
     useEffect(() => {
-        if (!city && !propertyType && !minPrice && !maxPrice && !listingType) {
+        if (!city && !propertyType && !minPrice && !maxPrice && !listingType && !days) {
             setSearchData([]);
             return;
         }
@@ -26,7 +27,8 @@ export default function SearchBar() {
                 property_type: propertyType,
                 minPrice: minPrice || null,
                 maxPrice: maxPrice || null,
-                listing_type: listingType || null
+                listing_type: listingType || null,
+                days: listingType === "rent" ? days || null : null // ✅ Only include days for Rent
             })
             .then((res) => {
                 setSearchData(res.data || []);
@@ -38,7 +40,7 @@ export default function SearchBar() {
         }, 500);
 
         return () => clearTimeout(delayDebounce);
-    }, [city, propertyType, minPrice, maxPrice, listingType]);
+    }, [city, propertyType, minPrice, maxPrice, listingType, days]);
 
     const handleClose = () => {
         setCity("");
@@ -46,6 +48,7 @@ export default function SearchBar() {
         setMinPrice("");
         setMaxPrice("");
         setListingType("");
+        setDays(""); // ✅ Reset days when clearing search
         setSearchData([]);
     };
 
@@ -109,8 +112,19 @@ export default function SearchBar() {
                         </label>
                     </div>
 
+                    {/* ✅ Show "Days" input only when Rent is selected */}
+                    {listingType === "rent" && (
+                        <input
+                            type='number'
+                            className='search-input'
+                            placeholder='Number of Days'
+                            value={days}
+                            onChange={(e) => setDays(e.target.value)}
+                        />
+                    )}
+
                     <div className='search-icon'>
-                        {(!city && !propertyType && !minPrice && !maxPrice && !listingType) ? (
+                        {(!city && !propertyType && !minPrice && !maxPrice && !listingType && !days) ? (
                             <AiOutlineSearch size={24} color="#FFFFFF" />
                         ) : (
                             <AiOutlineClose size={24} color="#FFFFFF" onClick={handleClose} />
@@ -118,6 +132,7 @@ export default function SearchBar() {
                     </div>
                 </div>
 
+                {/* ✅ Show search results */}
                 {searchData.length > 0 && (
                     <div className="search-result">
                         {searchData.map((place, index) => (

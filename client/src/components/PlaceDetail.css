@@ -140,3 +140,17 @@
   background-color: var(--color-secondary);
   color: white;
 }
+
+
+.status-available {
+  color: #28a745;
+  font-weight: bold;
+}
+.status-sold {
+  color: #dc3545;
+  font-weight: bold;
+}
+.status-upcoming {
+  color: #ffc107;
+  font-weight: bold;
+}

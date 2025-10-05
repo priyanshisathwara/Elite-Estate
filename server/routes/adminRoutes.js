@@ -2,7 +2,7 @@ import express from 'express';
 import { createPlace, getPlaces } from '../models/Places.js';
 import multer from "multer";
 import path from "path";
-import { createBooking, deletePlace, getBookingsByUser, getBookingsForAdmin, getPlaceById, getPlacedForAdminApproval, getPlacesForOwner, placeResult, updateBookingStatus, updatePlace, updatePlaceApplication } from '../controllers/adminController.js';
+import { checkIfBought, createBooking, deletePlace, getBookingsByUser, getBookingsForAdmin, getPlaceById, getPlacedForAdminApproval, getPlacesForOwner, placeResult, updateBookingStatus, updatePlace, updatePlaceApplication, updatePlaceStatus } from '../controllers/adminController.js';
 import { verifyUser } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -35,6 +35,10 @@ router.delete('/places/:id', verifyUser, deletePlace);
 router.get('/bookings/user/:userName', getBookingsByUser);
 router.patch("/update_booking/:bookingId", updateBookingStatus); 
 router.post("/get_bookings", getBookingsForAdmin);
+router.put("/update-status/:id", updatePlaceStatus);
+
+router.get('/bookings/:placeId/checkBought', checkIfBought);
+
 
 
 
