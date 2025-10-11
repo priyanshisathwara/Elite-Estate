@@ -4,6 +4,9 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import path from 'path';
+import paymentsRouter from './routes/payments.js';
+import webhookRouter from './routes/webhook.js';
+
 
 
 dotenv.config();
@@ -17,6 +20,8 @@ app.use('/uploads', express.static(path.join(process.cwd(), "uploads")));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
+app.use('/api/payments', paymentsRouter);
+app.use("/webhook", webhookRouter);
 
 
 app.get("/",  (req, res) => {

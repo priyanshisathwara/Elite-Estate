@@ -27,6 +27,8 @@ import PlaceDetail from './components/PlaceDetail';
 import RentForm from './components/RentForm';
 import Sections from './components/Sections';
 import ViMi from './components/ViMi';
+import PaymentPage from './components/PaymentPage';
+
 
 function App() {
 
@@ -61,6 +63,7 @@ function App() {
      <Route path="/rent/:id" element={<RentForm />} /> 
      <Route path="/section" element={<Sections />} /> 
      <Route path="/vimi" element={<ViMi />} /> 
+     <Route path="/payment/:placeId" element={<PaymentPage />} />
 
 
   
@@ -69,4 +72,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

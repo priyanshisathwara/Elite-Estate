@@ -45,15 +45,16 @@ export const createPlace = (req, res) => {
 
     // ✅ SQL Insert Query
     const sqlPlace = `
-      INSERT INTO places (
-        is_approved, place_name, location, price, city, owner_name, image, description,
-        property_type, bedrooms, bathrooms, area_sqft, furnished, amenities,
-        contact_number, listing_type,status, created_at, updated_at
-      )
-      VALUES (
-        false, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW()
-      )
-    `;
+  INSERT INTO places (
+    is_approved, place_name, location, price, city, owner_name, image, description,
+    property_type, bedrooms, bathrooms, area_sqft, furnished, amenities,
+    contact_number, listing_type, status, created_at, updated_at
+  )
+  VALUES (
+    false, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW()
+  )
+`;
+
 
     db.query(
       sqlPlace,
@@ -63,14 +64,14 @@ export const createPlace = (req, res) => {
         price || null,
         city,
         owner,
-        JSON.stringify(images),           // store multiple images as JSON
+        JSON.stringify(images),
         description || null,
         property_type || "Apartment",
         bedrooms || null,
         bathrooms || null,
         area_sqft || null,
         furnished || null,
-        amenities ? JSON.stringify(amenities) : null, // store JSON
+        amenities ? JSON.stringify(amenities) : null,
         contact_number || null,
         listing_type || "Sell",
         status || "Available"
@@ -87,7 +88,7 @@ export const createPlace = (req, res) => {
           images: images.map(img => `/uploads/${img}`),
           price: price || null,
           listing_type: listing_type || "Sell",
-           status: status || "Available"
+          status: status || "Available"
         });
       }
     );

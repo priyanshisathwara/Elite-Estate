@@ -1,0 +1,70 @@
+/* Payment Page Container */
+.payment-page-container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Payment Form Title */
+.payment-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.8rem;
+}
+
+/* Card Element Wrapper */
+.card-element-wrapper {
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  background-color: #f9f9f9;
+}
+
+/* Stripe Card Input Styling */
+.StripeElement {
+  padding: 12px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Submit Button */
+.payment-form button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4f46e5;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.payment-form button:hover {
+  background-color: #3730a3;
+}
+
+.payment-form button:disabled {
+  background-color: #a5b4fc;
+  cursor: not-allowed;
+}
+
+/* ToastContainer Styling */
+.Toastify__toast {
+  font-size: 14px;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+  .payment-page-container {
+    margin: 20px;
+    padding: 20px;
+  }
+}

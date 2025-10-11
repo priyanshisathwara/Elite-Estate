@@ -11,11 +11,12 @@ const PlaceDetail = () => {
   const [place, setPlace] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
   const [isBought, setIsBought] = useState(false);
+  const [isAlreadyRented, setIsAlreadyRented] = useState(false);
+
 
   useEffect(() => {
     const fetchPlaceData = async () => {
       try {
-        // Fetch place details
         const res = await axios.get(`http://localhost:8000/api/admin/places/${id}`);
         const placeData = res.data;
         setPlace(placeData);
@@ -30,16 +31,18 @@ const PlaceDetail = () => {
         }
         if (imgs.length > 0) setSelectedImage(`http://localhost:8000/uploads/${imgs[0]}`);
 
-        // ✅ Check if property is bought using MySQL backend
+        // ✅ Fetch Buy/Rent status
         try {
-          const boughtRes = await axios.get(
+          const statusRes = await axios.get(
             `http://localhost:8000/api/admin/bookings/${placeData.id}/checkBought`
           );
-          // MySQL API returns { isBought: true/false }
-          setIsBought(boughtRes.data.isBought);
+          // backend returns: { bought: true/false, rented: true/false }
+          setIsBought(statusRes.data.bought);
+          setIsAlreadyRented(statusRes.data.rented);
         } catch (err) {
-          console.warn("Failed to fetch bought status, defaulting to false", err);
-          setIsBought(false); // fallback
+          console.warn("Failed to fetch booking status, defaulting to false", err);
+          setIsBought(false);
+          setIsAlreadyRented(false);
         }
 
       } catch (err) {
@@ -51,6 +54,7 @@ const PlaceDetail = () => {
 
     fetchPlaceData();
   }, [id, navigate]);
+
 
   if (!place) return <p>Loading place details...</p>;
 
@@ -83,8 +87,14 @@ const PlaceDetail = () => {
       return;
     }
 
+    if (actionType === "Rent" && isAlreadyRented) {
+      toast.error("This property is already booked for selected dates!");
+      return;
+    }
+
     navigate(`/book-now/${place.id}?action=${actionType}`);
   };
+
 
   return (
     <div className="place-container">
@@ -135,7 +145,15 @@ const PlaceDetail = () => {
         </div>
 
         <div className="button-group">
-          <button className="rent-btn" onClick={() => handleAction("Rent")}>Rent Now</button>
+          <button
+            className="rent-btn"
+            onClick={() => handleAction("Rent")}
+            disabled={isAlreadyRented || isBought}
+            style={{ cursor: isAlreadyRented || isBought ? "not-allowed" : "pointer" }}
+          >
+            {isAlreadyRented ? "Already Booked" : "Rent Now"}
+          </button>
+
           <button
             className="buy-btn"
             onClick={() => handleAction("Buy")}
@@ -144,8 +162,10 @@ const PlaceDetail = () => {
           >
             {isBought ? "Already Bought" : "Buy Now"}
           </button>
+
           <Link to="/places" className="back-btn">Back to Places</Link>
         </div>
+
       </div>
 
       <ToastContainer />

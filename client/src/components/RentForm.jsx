@@ -6,19 +6,17 @@ import "react-toastify/dist/ReactToastify.css";
 import "./RentForm.css";
 
 const RentForm = () => {
-  const { id } = useParams();
+  const { id } = useParams(); // property ID from route
   const navigate = useNavigate();
 
   const [place, setPlace] = useState(null);
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPhone, setUserPhone] = useState("");
-  const [transactionType, setTransactionType] = useState("Online");
-
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  // ✅ Load logged-in user details
+  // Load logged-in user info
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (!storedUser) {
@@ -30,52 +28,48 @@ const RentForm = () => {
     }
   }, [navigate]);
 
-  // ✅ Fetch property details
+  // Fetch property details
   useEffect(() => {
+    if (!id) return;
     axios
       .get(`http://localhost:8000/api/admin/places/${id}`)
       .then((res) => {
+        console.log("Fetched place:", res.data);
         setPlace(res.data);
       })
       .catch((err) => {
         console.error("Error fetching place:", err);
+        toast.error("Failed to load property details.");
       });
   }, [id]);
 
-  // ✅ Handle rent form submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = (e) => {
+  e.preventDefault();
 
-    if (!userName || !startDate || !endDate) {
-      toast.error("Please fill all required fields.");
-      return;
-    }
+  if (!userName || !startDate || !endDate) {
+    toast.error("Please fill all required fields.");
+    return;
+  }
 
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/api/admin/bookings",
-        {
-          placeId: id,
-          user_name: userName,
-          user_email: userEmail,
-          user_phone: userPhone,
-          transaction_type: transactionType,
-          action_type: "Rent",
-          start_date: startDate,
-          end_date: endDate,
-        }
-      );
+  if (!place || !place.id) {
+    toast.error("Property not loaded yet.");
+    return;
+  }
 
-      toast.success("Rent request submitted successfully ✅");
-      navigate(`/places`);
-    } catch (error) {
-      if (error.response && error.response.data.error) {
-        toast.error(error.response.data.error);
-      } else {
-        toast.error("Failed to submit rent request ❌");
-      }
-    }
-  };
+  // Include query params here
+  const queryParams = new URLSearchParams({
+    actionType: "Rent",
+    userName,
+    userEmail,
+    userPhone,
+    price: place.price,
+    startDate,
+    endDate,
+  }).toString();
+
+  // Pass both path param and query params
+  navigate(`/payment/${place.id}?${queryParams}`);
+};
 
   if (!place) return <p>Loading property details...</p>;
 
@@ -126,17 +120,8 @@ const RentForm = () => {
           required
         />
 
-        <label>Transaction Type</label>
-        <select
-          value={transactionType}
-          onChange={(e) => setTransactionType(e.target.value)}
-        >
-          <option value="Online">Online</option>
-          <option value="Cash">Cash</option>
-        </select>
-
         <button type="submit" className="rent-btn">
-          Confirm Rent
+          Proceed to Payment
         </button>
       </form>
 

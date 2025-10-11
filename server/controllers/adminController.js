@@ -3,25 +3,21 @@ import db from "../config/db.js";
 import { Mail } from "../config/mailer.js";
 
 
-// Get Place by ID
-export const getPlaceById = (req, res) => {
-  const { id } = req.params;
-  const sqlGetPlace = "SELECT * FROM places WHERE id = ? AND is_approved = 1 LIMIT 1";
+export const getPlaceById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const place = await fetchPlaceById(id);
 
-  db.query(sqlGetPlace, [id], (err, results) => {
-    if (err) {
-      return res.status(500).json({
-        error: "Error fetching place",
-        details: err.message,
-      });
-    }
+    if (!place) return res.status(404).json({ error: "Place not found" });
 
-    if (results.length === 0) {
-      return res.status(404).json({ error: "Place not found" });
-    }
+    // ✅ Check if bought
+    const isBought = await checkIfBought(id);
 
-    return res.status(200).json(results[0]); // send single place
-  });
+    res.json({ ...place, isBought });
+  } catch (err) {
+    console.error("Error fetching place:", err);
+    res.status(500).json({ error: "Internal server error", details: err.message });
+  }
 };
 
 
@@ -108,15 +104,15 @@ export const createBooking = (req, res) => {
     user_name,
     user_email,
     user_phone,
-    transaction_type,
     start_date,
     end_date,
     action_type, // "Rent" or "Buy"
+    paymentIntentId, // from frontend after Stripe payment
   } = req.body;
 
-  // Basic validation
-  if (!placeId || !user_name || !user_email || !transaction_type) {
-    return res.status(400).json({ error: "Place, user details, and transaction type are required." });
+  // 1️⃣ Basic validation
+  if (!placeId || !user_name || !user_email || !action_type) {
+    return res.status(400).json({ error: "Place, user details, and action type are required." });
   }
 
   // Dates required only for Rent
@@ -124,7 +120,7 @@ export const createBooking = (req, res) => {
     return res.status(400).json({ error: "Start and end dates are required for renting." });
   }
 
-  // Step 1: Check place status
+  // 2️⃣ Check place status
   const placeStatusQuery = "SELECT status FROM places WHERE id = ?";
   db.query(placeStatusQuery, [placeId], (statusErr, statusResult) => {
     if (statusErr) {
@@ -138,24 +134,18 @@ export const createBooking = (req, res) => {
 
     const placeStatus = statusResult[0].status;
 
-    // If Buy, check if already sold
+    // If already sold, reject buy request
     if (action_type === "Buy" && placeStatus === "Sold") {
-      return res.status(400).json({ error: "This place has already been bought." });
+      return res.status(409).json({ booked: true, message: "This place has already been bought." });
     }
 
-    // Step 2: Proceed to booking
-    proceedBooking();
-  });
-
-  // ------------------------
-  function proceedBooking() {
-    // If Rent, check for overlapping dates
+    // 3️⃣ For Rent, check overlapping dates
     if (action_type === "Rent") {
       const checkQuery = `
         SELECT * 
         FROM bookings
         WHERE place_id = ? 
-          AND transaction_type = 'Rent'
+          AND action_type = 'Rent'
           AND (
             (start_date <= ? AND end_date >= ?)
             OR (start_date <= ? AND end_date >= ?)
@@ -172,171 +162,227 @@ export const createBooking = (req, res) => {
           }
 
           if (rows.length > 0) {
-            return res.status(409).json({ error: "Place is already booked for the selected dates." });
+            return res.status(409).json({ booked: true, message: "Place is already booked for the selected dates." });
           }
 
-          insertBooking(); // proceed to insert
+          // Proceed to insert rent booking
+          insertBooking("Rent");
         }
       );
     } else {
-      // Buy: directly insert booking
-      insertBooking();
+      // Buy: directly insert
+      insertBooking("Buy");
     }
-  }
+  });
 
   // ------------------------
-  function insertBooking() {
-  const insertQuery = `
-    INSERT INTO bookings
-    (place_id, user_name, user_email, user_phone, transaction_type, start_date, end_date, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending')
-  `;
+  function insertBooking(type) {
+    const insertQuery = `
+      INSERT INTO bookings
+      (place_id, user_name, user_email, user_phone, transaction_type, action_type, start_date, end_date, status, payment_intent_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Confirmed', ?)
+    `;
 
-  db.query(
-    insertQuery,
-    [placeId, user_name, user_email, user_phone || null, transaction_type, start_date || null, end_date || null],
-    (insertErr, result) => {
-      if (insertErr) {
-        console.error("Booking failed:", insertErr);
-        return res.status(500).json({ error: "Booking failed", details: insertErr.message });
-      }
+    db.query(
+      insertQuery,
+      [
+        placeId,
+        user_name,
+        user_email,
+        user_phone || null,
+        "Online", // payment via Stripe
+        type, // Rent or Buy
+        type === "Rent" ? start_date : null,
+        type === "Rent" ? end_date : null,
+        paymentIntentId || null
+      ],
+      (insertErr, result) => {
+        if (insertErr) {
+          console.error("Booking failed:", insertErr);
+          return res.status(500).json({ error: "Booking failed", details: insertErr.message });
+        }
 
-      // ✅ If action is Buy, mark the place as Sold
-      if (action_type === "Buy") {
-        const updatePlaceStatus = `UPDATE places SET status = 'Sold' WHERE id = ?`;
-        db.query(updatePlaceStatus, [placeId], (err) => {
-          if (err) console.error("Failed to update place status:", err);
+        // If Buy, mark the place as Sold
+        if (type === "Buy") {
+          const updatePlaceStatus = `UPDATE places SET status = 'Sold' WHERE id = ?`;
+          db.query(updatePlaceStatus, [placeId], (err) => {
+            if (err) console.error("Failed to update place status:", err);
+          });
+        }
+
+        // ✅ Send success response with proper message
+        const message =
+          type === "Rent"
+            ? "Property successfully booked for rent."
+            : "Property successfully purchased.";
+
+        return res.status(201).json({
+          booked: false,
+          message,
+          bookingId: result.insertId,
+          status: "Confirmed",
         });
       }
-
-      // Send confirmation email
-      try {
-        const mail = new Mail();
-        mail.setTo(user_email);
-        mail.setSubject(`${action_type === "Rent" ? "Booking" : "Purchase"} Request Pending - Elite Estate`);
-        mail.setText(`
-          Hello ${user_name},
-          Your ${action_type === "Rent" ? "booking" : "purchase"} request for place ID ${placeId} has been received.
-          ${action_type === "Rent" ? `Dates: ${start_date} to ${end_date}` : ""}
-          Transaction Type: ${transaction_type}.
-          Our team will review and confirm it soon.
-        `);
-        mail.send();
-      } catch (mailErr) {
-        console.error("Mail send failed:", mailErr);
-      }
-
-      res.status(201).json({
-        message: `${action_type === "Rent" ? "Booking" : "Purchase"} request created successfully`,
-        bookingId: result.insertId,
-      });
-    }
-  );
-}
+    );
+  }
 };
 
-export const checkIfBought = (req, res) => {
-  const placeId = Number(req.params.placeId); // convert to number
-  if (isNaN(placeId)) {
-    return res.status(400).json({ message: "Invalid place ID" });
-  }
 
-  const sql = `
-    SELECT * FROM bookings
-    WHERE place_id = ? AND action_type = 'Buy' AND status = 'Confirmed'
-    LIMIT 1
-  `;
+export const markBookingPaid = async (placeId, userDetails, paymentDetails) => {
+  return new Promise((resolve, reject) => {
+    try {
+      const safeStartDate = userDetails.start_date ? new Date(userDetails.start_date) : null;
+      const safeEndDate = userDetails.end_date ? new Date(userDetails.end_date) : null;
+      const paymentIntentId = paymentDetails.paymentIntentId || null;
 
-  db.query(sql, [placeId], (err, results) => {
-    if (err) {
-      console.error("Error checking booking:", err);
-      return res.status(500).json({ message: "Server error" });
+      const insertQuery = `
+        INSERT INTO bookings
+        (place_id, user_name, user_email, user_phone, transaction_type, action_type, start_date, end_date, status, payment_intent_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Confirmed', ?)
+      `;
+
+      db.query(
+        insertQuery,
+        [
+          placeId,
+          userDetails.user_name || null,
+          userDetails.user_email || null,
+          userDetails.user_phone || null,
+          "Online",
+          userDetails.action_type,
+          userDetails.action_type === "Rent" ? safeStartDate : null,
+          userDetails.action_type === "Rent" ? safeEndDate : null,
+          paymentIntentId
+        ],
+        (err, result) => {
+          if (err) return reject(err);
+
+          // If Buy, mark place as Sold
+          if (userDetails.action_type === "Buy") {
+            const updatePlaceStatus = `UPDATE places SET status = 'Sold' WHERE id = ?`;
+            db.query(updatePlaceStatus, [placeId], (err2) => {
+              if (err2) console.error(err2);
+            });
+          }
+
+          resolve(result.insertId);
+        }
+      );
+    } catch (err) {
+      reject(err);
     }
-
-    const isBought = results.length > 0;
-    res.json({ isBought });
   });
 };
 
-export const updateBookingStatus = (req, res) => {
-  const { bookingId } = req.params;
-  const { status } = req.body; // "Confirmed" or "Rejected"
+export const fetchPlaceById = (id) => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT * FROM places WHERE id = ? AND is_approved = 1 LIMIT 1";
+    db.query(sql, [id], (err, results) => {
+      if (err) return reject(err);
+      if (results.length === 0) return resolve(null);
 
-  if (!["Confirmed", "Cancelled"].includes(status)) {
-    return res.status(400).json({ error: "Invalid status value" });
-  }
+      const place = results[0];
 
-  const updateQuery = `UPDATE bookings SET status = ? WHERE id = ?`;
+      // ✅ Parse JSON fields safely
+      try { place.image = place.image ? JSON.parse(place.image) : []; } catch { place.image = []; }
+      try { place.amenities = place.amenities ? JSON.parse(place.amenities) : []; } catch { place.amenities = []; }
 
-  db.query(updateQuery, [status, bookingId], (err, result) => {
-    if (err) {
-      console.error("Error updating booking status:", err);
-      return res.status(500).json({ error: "Failed to update booking status" });
-    }
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Booking not found" });
-    }
-
-    // ✅ Get user email to notify
-    const fetchQuery = `SELECT user_name, user_email, place_id, transaction_type, start_date, end_date 
-                        FROM bookings WHERE id = ?`;
-
-    db.query(fetchQuery, [bookingId], (fetchErr, rows) => {
-      if (fetchErr) {
-        console.error("Error fetching booking details:", fetchErr);
-        return res.status(500).json({ error: "Failed to fetch booking details" });
-      }
-
-      const booking = rows[0];
-
-      try {
-        const mail = new Mail();
-        mail.setTo(booking.user_email);
-        mail.setSubject(
-          status === "Confirmed"
-            ? "Booking Confirmed - Elite Estate"
-            : "Booking Rejected - Elite Estate"
-        );
-        mail.setText(
-          status === "Confirmed"
-            ? `Hello ${booking.user_name},\n\nYour booking for place ID ${booking.place_id} has been CONFIRMED ✅.\n\nTransaction: ${booking.transaction_type}\nDates: ${booking.start_date} → ${booking.end_date}\n\nThank you for choosing Elite Estate.`
-            : `Hello ${booking.user_name},\n\nUnfortunately, your booking for place ID ${booking.place_id} has been REJECTED ❌.\n\nTransaction: ${booking.transaction_type}\nDates: ${booking.start_date} → ${booking.end_date}\n\nPlease try another property.`
-        );
-        mail.send();
-      } catch (mailErr) {
-        console.error("Mail send failed:", mailErr);
-      }
-
-      res.json({ message: `Booking ${status.toLowerCase()} successfully` });
+      resolve(place);
     });
   });
 };
 
-export const getBookingsForAdmin = (req, res) => {
-  const { status } = req.body; // Optional: Pending, Confirmed, Cancelled
-  let sql = "SELECT * FROM bookings";
-  let params = [];
+export const checkIfBought = (placeId) => {
+  return new Promise((resolve, reject) => {
+    if (!placeId) return reject(new Error("Missing placeId"));
 
-  if (status) {
-    sql += " WHERE status = ?";
-    params.push(status);
-  }
-
-  sql += " ORDER BY start_date DESC";
-
-  db.query(sql, params, (err, result) => {
-    if (err) {
-      console.error("Error fetching bookings:", err);
-      return res.status(500).json({ error: "Failed to fetch bookings" });
-    }
-
-    return res.status(200).json({
-      message: "Bookings list",
-      data: result,
+    const sql = `
+      SELECT * FROM bookings
+      WHERE place_id = ? AND action_type = 'Buy' AND status = 'Confirmed'
+      LIMIT 1
+    `;
+    db.query(sql, [placeId], (err, results) => {
+      if (err) return reject(err);
+      resolve(results.length > 0);
     });
   });
 };
+
+
+// controllers/adminController.js
+
+export const checkBookingStatus = (placeId, startDate = null, endDate = null) => {
+  return new Promise((resolve, reject) => {
+    if (!placeId) return reject(new Error("Missing placeId"));
+
+    // Query to check if property is bought
+    const buyQuery = `
+      SELECT 1 FROM bookings
+      WHERE place_id = ? AND action_type = 'Buy' AND status = 'Confirmed'
+      LIMIT 1
+    `;
+
+    db.query(buyQuery, [placeId], (err, buyResults) => {
+      if (err) return reject(err);
+
+      if (buyResults.length > 0) {
+        return resolve({ bought: true, rented: false });
+      }
+
+      // If dates provided, check for overlapping rent
+      if (startDate && endDate) {
+        const rentQuery = `
+          SELECT 1 FROM bookings
+          WHERE place_id = ? AND action_type = 'Rent' AND status = 'Confirmed'
+            AND (
+              (start_date <= ? AND end_date >= ?)
+              OR (start_date <= ? AND end_date >= ?)
+              OR (start_date >= ? AND end_date <= ?)
+            )
+          LIMIT 1
+        `;
+        db.query(
+          rentQuery,
+          [placeId, startDate, startDate, endDate, endDate, startDate, endDate],
+          (rentErr, rentResults) => {
+            if (rentErr) return reject(rentErr);
+            resolve({ bought: false, rented: rentResults.length > 0 });
+          }
+        );
+      } else {
+        // No dates provided → only check buy
+        resolve({ bought: false, rented: false });
+      }
+    });
+  });
+};
+
+
+
+// export const getBookingsForAdmin = (req, res) => {
+//   const { status } = req.body; // Optional: Pending, Confirmed, Cancelled
+//   let sql = "SELECT * FROM bookings";
+//   let params = [];
+
+//   if (status) {
+//     sql += " WHERE status = ?";
+//     params.push(status);
+//   }
+
+//   sql += " ORDER BY start_date DESC";
+
+//   db.query(sql, params, (err, result) => {
+//     if (err) {
+//       console.error("Error fetching bookings:", err);
+//       return res.status(500).json({ error: "Failed to fetch bookings" });
+//     }
+
+//     return res.status(200).json({
+//       message: "Bookings list",
+//       data: result,
+//     });
+//   });
+// };
 
 export const updatePlace = (req, res) => {
   const { id } = req.params;

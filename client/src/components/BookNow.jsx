@@ -1,38 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import './BookNow.css';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// src/components/BookNow.jsx
+import React, { useState, useEffect } from "react";
+import "./BookNow.css";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const BookNow = () => {
   const { id } = useParams();
   const [place, setPlace] = useState(null);
   const [bookingConfirmed, setBookingConfirmed] = useState(false);
   const [searchParams] = useSearchParams();
-  const actionType = searchParams.get("action") || "Rent"; // Rent or Buy
+  const actionType = searchParams.get("action") || "Rent";
 
-  // Dates (only for Rent)
-  const [bookingStartDate, setBookingStartDate] = useState('');
-  const [bookingEndDate, setBookingEndDate] = useState('');
-
-  // User details
-  const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState('');
-  const [userPhone, setUserPhone] = useState('');
-  const [transactionType, setTransactionType] = useState('Online'); // default
+  const [bookingStartDate, setBookingStartDate] = useState("");
+  const [bookingEndDate, setBookingEndDate] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userPhone, setUserPhone] = useState("");
+  const [transactionType, setTransactionType] = useState("Online");
 
   const navigate = useNavigate();
 
   // Check user login
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("user");
     if (!storedUser) {
-      toast.error('You must login first!');
-      navigate('/login');
+      toast.error("You must login first!");
+      navigate("/login");
     } else {
       const parsedUser = JSON.parse(storedUser);
-      setUserEmail(parsedUser.email); // preload email from login
+      setUserEmail(parsedUser.email);
     }
   }, [navigate]);
 
@@ -40,16 +38,18 @@ const BookNow = () => {
   useEffect(() => {
     const fetchPlaceData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/admin/places/${id}`);
+        const response = await axios.get(
+          `http://localhost:8000/api/admin/places/${id}`
+        );
         let placeData = response.data;
         try {
-          placeData.images = JSON.parse(placeData.image); // string → array
+          placeData.images = JSON.parse(placeData.image);
         } catch (e) {
           placeData.images = [];
         }
         setPlace(placeData);
       } catch (error) {
-        console.error('Error fetching place data:', error);
+        console.error("Error fetching place data:", error);
         toast.error("Failed to fetch property details.");
         navigate("/places");
       }
@@ -57,70 +57,27 @@ const BookNow = () => {
     fetchPlaceData();
   }, [id, navigate]);
 
-  // Handle form submission
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-
-    // Prevent submitting if already sold
-    if (actionType === "Buy" && place.status === "Sold") {
-      toast.error("This property has already been bought!");
-      return;
-    }
-
+  // New: navigate to payment page (pass minimal data via query params)
+  const handleProceedToPayment = () => {
     if (!userName.trim()) {
-      toast.error('Please enter your name.');
-      return;
-    }
-    if (!transactionType) {
-      toast.error('Please select a transaction type.');
+      toast.error("Please enter your name.");
       return;
     }
 
-    // Build request payload
-    const requestData = {
-      placeId: parseInt(id),
-      user_name: userName,
-      user_email: userEmail,
-      user_phone: userPhone || null,
-      transaction_type: transactionType,
-      action_type: actionType,
-    };
+    // Build query string (we keep it minimal; sensitive data should not go in URL)
+    const qs = new URLSearchParams({
+      action: actionType,
+      transaction: transactionType,
+      userEmail: userEmail || "",
+      userName: userName || "",
+      userPhone: userPhone || "",
+      price: place?.price?.toString() || "0"
+    }).toString();
 
-    // Add dates only for Rent
-    if (actionType === "Rent") {
-      if (!bookingStartDate || !bookingEndDate) {
-        toast.error('Please select start and end dates.');
-        return;
-      }
-      requestData.start_date = bookingStartDate;
-      requestData.end_date = bookingEndDate;
-    }
-
-    try {
-      const response = await axios.post('http://localhost:8000/api/admin/bookings', requestData);
-      console.log('Booking response:', response.data);
-      setBookingConfirmed(true);
-      toast.success(`${actionType === "Rent" ? "Booking" : "Purchase"} request created for ${userName}!`);
-    } catch (error) {
-      console.error('Booking failed:', error);
-      toast.error('Booking failed. Please try again.');
-    }
+    navigate(`/payment/${id}?${qs}`);
   };
 
   if (!place) return <p>Loading place details...</p>;
-
-  // Show sold message immediately for Buy
-  if (actionType === "Buy" && place.status === "Sold") {
-    return (
-      <section className="book-now-container">
-        <div className="booking-confirmation">
-          <h2>This property has already been bought!</h2>
-          <p>You cannot purchase it again.</p>
-          <button onClick={() => navigate("/places")}>Back to Places</button>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className="book-now-container">
@@ -138,87 +95,69 @@ const BookNow = () => {
         <div className="property-info">
           <h1>{place.place_name}</h1>
           <p className="property-description">{place.description}</p>
-          <p className="price">₹{place.price} / {actionType === "Rent" ? "night" : "one-time"}</p>
+          <p className="price">
+            ₹{place.price} / {actionType === "Rent" ? "night" : "one-time"}
+          </p>
         </div>
       </div>
 
-      {bookingConfirmed ? (
-        <div className="booking-confirmation">
-          <h2>Your {actionType === "Rent" ? "booking request" : "purchase request"} has been created!</h2>
-          <p>Name: {userName}</p>
-          <p>Email: {userEmail}</p>
-          <p>Phone: {userPhone || 'N/A'}</p>
-          <p>Transaction Type: {transactionType}</p>
-          {actionType === "Rent" && (
-            <>
-              <p>Start Date: {bookingStartDate}</p>
-              <p>End Date: {bookingEndDate}</p>
-            </>
-          )}
-          <p>Our team will review and confirm it soon.</p>
-        </div>
-      ) : (
-        <form className="booking-form" onSubmit={handleFormSubmit}>
-          <h2>{actionType === "Rent" ? "Book Your Stay" : "Buy This Property"}</h2>
+      <form className="booking-form" onSubmit={(e) => e.preventDefault()}>
+        <h2>
+          {actionType === "Rent" ? "Book Your Stay" : "Buy This Property"}
+        </h2>
 
-          <label htmlFor="user-name">Your Name</label>
-          <input
-            type="text"
-            id="user-name"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            required
-          />
+        <label>Your Name</label>
+        <input
+          type="text"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
+        />
 
-          <label htmlFor="user-email">Your Email</label>
-          <input type="email" id="user-email" value={userEmail} readOnly />
+        <label>Your Email</label>
+        <input type="email" value={userEmail} readOnly />
 
-          <label htmlFor="user-phone">Your Phone (Optional)</label>
-          <input
-            type="text"
-            id="user-phone"
-            value={userPhone}
-            onChange={(e) => setUserPhone(e.target.value)}
-          />
+        <label>Your Phone (Optional)</label>
+        <input
+          type="text"
+          value={userPhone}
+          onChange={(e) => setUserPhone(e.target.value)}
+        />
 
-          <label htmlFor="transaction-type">Transaction Type</label>
-          <select
-            id="transaction-type"
-            value={transactionType}
-            onChange={(e) => setTransactionType(e.target.value)}
-            required
-          >
-            <option value="Online">Online</option>
-            <option value="Cash">Cash</option>
-          </select>
+        <label>Transaction Type</label>
+        <select
+          value={transactionType}
+          onChange={(e) => setTransactionType(e.target.value)}
+        >
+          <option value="Online">Online</option>
+          <option value="Cash">Cash</option>
+        </select>
 
-          {actionType === "Rent" && (
-            <>
-              <label htmlFor="start-date">Start Date</label>
-              <input
-                type="date"
-                id="start-date"
-                value={bookingStartDate}
-                onChange={(e) => setBookingStartDate(e.target.value)}
-                required
-              />
+        {actionType === "Rent" && (
+          <>
+            <label>Start Date</label>
+            <input
+              type="date"
+              value={bookingStartDate}
+              onChange={(e) => setBookingStartDate(e.target.value)}
+            />
+            <label>End Date</label>
+            <input
+              type="date"
+              value={bookingEndDate}
+              onChange={(e) => setBookingEndDate(e.target.value)}
+            />
+          </>
+        )}
 
-              <label htmlFor="end-date">End Date</label>
-              <input
-                type="date"
-                id="end-date"
-                value={bookingEndDate}
-                onChange={(e) => setBookingEndDate(e.target.value)}
-                required
-              />
-            </>
-          )}
-
-          <button type="submit" className="book-now-button">
-            {actionType === "Rent" ? "Book Now" : "Buy Now"}
-          </button>
-        </form>
-      )}
+        {/* NEW: Proceed to Payment button */}
+        <button
+          type="button"
+          className="book-now-button"
+          onClick={handleProceedToPayment}
+        >
+          {actionType === "Rent" ? "Proceed to Payment" : "Pay Now"}
+        </button>
+      </form>
 
       <ToastContainer />
     </section>

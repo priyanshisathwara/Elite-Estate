@@ -2,7 +2,7 @@ import express from 'express';
 import { createPlace, getPlaces } from '../models/Places.js';
 import multer from "multer";
 import path from "path";
-import { checkIfBought, createBooking, deletePlace, getBookingsByUser, getBookingsForAdmin, getPlaceById, getPlacedForAdminApproval, getPlacesForOwner, placeResult, updateBookingStatus, updatePlace, updatePlaceApplication, updatePlaceStatus } from '../controllers/adminController.js';
+import { checkBookingStatus, createBooking, deletePlace, getBookingsByUser, getPlaceById, getPlacedForAdminApproval, getPlacesForOwner, placeResult, updatePlace, updatePlaceApplication, updatePlaceStatus } from '../controllers/adminController.js';
 import { verifyUser } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -33,11 +33,21 @@ router.put(
 router.get('/owner-places', verifyUser, getPlacesForOwner);
 router.delete('/places/:id', verifyUser, deletePlace);
 router.get('/bookings/user/:userName', getBookingsByUser);
-router.patch("/update_booking/:bookingId", updateBookingStatus); 
-router.post("/get_bookings", getBookingsForAdmin);
 router.put("/update-status/:id", updatePlaceStatus);
 
-router.get('/bookings/:placeId/checkBought', checkIfBought);
+router.get('/bookings/:placeId/checkBought', async (req, res) => {
+  try {
+    const placeId = req.params.placeId;
+    const { startDate, endDate } = req.query; // optional query for rent dates
+
+    const status = await checkBookingStatus(placeId, startDate, endDate);
+    res.json(status);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 
 
