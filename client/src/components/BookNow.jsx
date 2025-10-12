@@ -1,4 +1,3 @@
-// src/components/BookNow.jsx
 import React, { useState, useEffect } from "react";
 import "./BookNow.css";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -8,19 +7,57 @@ import "react-toastify/dist/ReactToastify.css";
 
 const BookNow = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [place, setPlace] = useState(null);
-  const [bookingConfirmed, setBookingConfirmed] = useState(false);
-  const [searchParams] = useSearchParams();
-  const actionType = searchParams.get("action") || "Rent";
-
+  const [bookings, setBookings] = useState([]);
   const [bookingStartDate, setBookingStartDate] = useState("");
   const [bookingEndDate, setBookingEndDate] = useState("");
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPhone, setUserPhone] = useState("");
   const [transactionType, setTransactionType] = useState("Online");
+  const [searchParams] = useSearchParams();
+  const actionType = searchParams.get("action") || "Rent";
 
-  const navigate = useNavigate();
+  // Fetch place data
+  useEffect(() => {
+    const fetchPlaceData = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8000/api/admin/places/${id}`);
+        let placeData = res.data;
+
+        // Handle images
+        if (typeof placeData.image === "string") {
+          try {
+            const parsed = JSON.parse(placeData.image);
+            placeData.images = Array.isArray(parsed) ? parsed : [parsed];
+          } catch {
+            placeData.images = [placeData.image];
+          }
+        } else if (Array.isArray(placeData.image)) {
+          placeData.images = placeData.image;
+        } else {
+          placeData.images = [];
+        }
+
+        setPlace(placeData);
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to fetch property details.");
+        navigate("/places");
+      }
+    };
+
+    fetchPlaceData();
+  }, [id, navigate]);
+
+  // Fetch bookings for this place
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8000/api/admin/bookings/${id}`)
+      .then((res) => setBookings(res.data))
+      .catch((err) => console.error(err));
+  }, [id]);
 
   // Check user login
   useEffect(() => {
@@ -29,55 +66,70 @@ const BookNow = () => {
       toast.error("You must login first!");
       navigate("/login");
     } else {
-      const parsedUser = JSON.parse(storedUser);
-      setUserEmail(parsedUser.email);
+      setUserEmail(JSON.parse(storedUser).email);
     }
   }, [navigate]);
 
-  // Fetch place data
-  useEffect(() => {
-    const fetchPlaceData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8000/api/admin/places/${id}`
-        );
-        let placeData = response.data;
-        try {
-          placeData.images = JSON.parse(placeData.image);
-        } catch (e) {
-          placeData.images = [];
-        }
-        setPlace(placeData);
-      } catch (error) {
-        console.error("Error fetching place data:", error);
-        toast.error("Failed to fetch property details.");
-        navigate("/places");
-      }
-    };
-    fetchPlaceData();
-  }, [id, navigate]);
+  // Check if date range is already booked
+  const isDateRangeBooked = (start, end) => {
+    if (!start || !end) return false;
+    const startDate = new Date(start);
+    const endDate = new Date(end);
 
-  // New: navigate to payment page (pass minimal data via query params)
+    return bookings.some((b) => {
+      const bookedStart = new Date(b.startDate || b.start_date);
+      const bookedEnd = new Date(b.endDate || b.end_date);
+      return startDate <= bookedEnd && endDate >= bookedStart; // overlap check
+    });
+  };
+
+  // Calculate total days
+  const calculateDays = (startDate, endDate) => {
+    if (!startDate || !endDate) return 0;
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = end - start;
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // include both start & end day
+  };
+
+  // Proceed to payment
   const handleProceedToPayment = () => {
+    if (!bookingStartDate || !bookingEndDate) {
+      toast.error("Please select start and end dates.");
+      return;
+    }
+
+    if (isDateRangeBooked(bookingStartDate, bookingEndDate)) {
+      toast.error("Selected dates are already booked. Please choose another period.");
+      return;
+    }
+
     if (!userName.trim()) {
       toast.error("Please enter your name.");
       return;
     }
 
-    // Build query string (we keep it minimal; sensitive data should not go in URL)
+    const totalDays = calculateDays(bookingStartDate, bookingEndDate);
+    const totalPrice = (place?.price || 0) * totalDays;
+
     const qs = new URLSearchParams({
       action: actionType,
       transaction: transactionType,
-      userEmail: userEmail || "",
-      userName: userName || "",
-      userPhone: userPhone || "",
-      price: place?.price?.toString() || "0"
+      userEmail: userEmail,
+      userName: userName,
+      userPhone: userPhone,
+      price: totalPrice.toString(),
+      startDate: bookingStartDate,
+      endDate: bookingEndDate,
     }).toString();
 
     navigate(`/payment/${id}?${qs}`);
   };
 
   if (!place) return <p>Loading place details...</p>;
+
+  const totalDays = calculateDays(bookingStartDate, bookingEndDate);
+  const totalPrice = (place?.price || 0) * totalDays;
 
   return (
     <section className="book-now-container">
@@ -102,32 +154,19 @@ const BookNow = () => {
       </div>
 
       <form className="booking-form" onSubmit={(e) => e.preventDefault()}>
-        <h2>
-          {actionType === "Rent" ? "Book Your Stay" : "Buy This Property"}
-        </h2>
+        <h2>{actionType === "Rent" ? "Book Your Stay" : "Buy This Property"}</h2>
 
         <label>Your Name</label>
-        <input
-          type="text"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-        />
+        <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} />
 
         <label>Your Email</label>
         <input type="email" value={userEmail} readOnly />
 
         <label>Your Phone (Optional)</label>
-        <input
-          type="text"
-          value={userPhone}
-          onChange={(e) => setUserPhone(e.target.value)}
-        />
+        <input type="text" value={userPhone} onChange={(e) => setUserPhone(e.target.value)} />
 
         <label>Transaction Type</label>
-        <select
-          value={transactionType}
-          onChange={(e) => setTransactionType(e.target.value)}
-        >
+        <select value={transactionType} onChange={(e) => setTransactionType(e.target.value)}>
           <option value="Online">Online</option>
           <option value="Cash">Cash</option>
         </select>
@@ -135,27 +174,26 @@ const BookNow = () => {
         {actionType === "Rent" && (
           <>
             <label>Start Date</label>
-            <input
-              type="date"
-              value={bookingStartDate}
-              onChange={(e) => setBookingStartDate(e.target.value)}
-            />
+            <input type="date" value={bookingStartDate} onChange={(e) => setBookingStartDate(e.target.value)} />
+
             <label>End Date</label>
-            <input
-              type="date"
-              value={bookingEndDate}
-              onChange={(e) => setBookingEndDate(e.target.value)}
-            />
+            <input type="date" value={bookingEndDate} onChange={(e) => setBookingEndDate(e.target.value)} />
+
+            {totalDays > 0 && (
+              <p style={{ fontWeight: "bold", marginTop: "10px", color: "black" }}>
+                Total Price for {totalDays} {totalDays === 1 ? "day" : "days"}: ₹{totalPrice}
+              </p>
+            )}
           </>
         )}
 
-        {/* NEW: Proceed to Payment button */}
         <button
           type="button"
           className="book-now-button"
           onClick={handleProceedToPayment}
+          disabled={!bookingStartDate || !bookingEndDate || isDateRangeBooked(bookingStartDate, bookingEndDate)}
         >
-          {actionType === "Rent" ? "Proceed to Payment" : "Pay Now"}
+          {isDateRangeBooked(bookingStartDate, bookingEndDate) ? "Dates Not Available" : "Proceed to Payment"}
         </button>
       </form>
 

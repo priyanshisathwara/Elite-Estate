@@ -52,10 +52,15 @@ export default function SearchBar() {
         setSearchData([]);
     };
 
-    const handleItemClick = (place) => {
-        navigate(`/places/name/${encodeURIComponent(place.city)}`);
+   const handleItemClick = (place) => {
+    if (place && place.id) {
+        navigate(`/placedetails/${place.id}`); // ✅ updated route
         handleClose();
-    };
+    } else {
+        console.error("Invalid place ID:", place);
+    }
+};
+
 
     return (
         <section className='search-section'>
@@ -71,7 +76,7 @@ export default function SearchBar() {
                     <input
                         type='text'
                         className='search-input'
-                        placeholder='Property Type (Apartment, Villa, etc.)'
+                        placeholder='Property Type'
                         value={propertyType}
                         onChange={(e) => setPropertyType(e.target.value)}
                     />
@@ -117,7 +122,7 @@ export default function SearchBar() {
                         <input
                             type='number'
                             className='search-input'
-                            placeholder='Number of Days'
+                            placeholder='No.of Days'
                             value={days}
                             onChange={(e) => setDays(e.target.value)}
                         />

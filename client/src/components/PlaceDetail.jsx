@@ -11,9 +11,9 @@ const PlaceDetail = () => {
   const [place, setPlace] = useState(null);
   const [selectedImage, setSelectedImage] = useState("");
   const [isBought, setIsBought] = useState(false);
-  const [isAlreadyRented, setIsAlreadyRented] = useState(false);
+  const [bookings, setBookings] = useState([]);
 
-
+  // Fetch place details and booking status
   useEffect(() => {
     const fetchPlaceData = async () => {
       try {
@@ -31,18 +31,15 @@ const PlaceDetail = () => {
         }
         if (imgs.length > 0) setSelectedImage(`http://localhost:8000/uploads/${imgs[0]}`);
 
-        // ✅ Fetch Buy/Rent status
+        // Fetch buy status
         try {
           const statusRes = await axios.get(
             `http://localhost:8000/api/admin/bookings/${placeData.id}/checkBought`
           );
-          // backend returns: { bought: true/false, rented: true/false }
           setIsBought(statusRes.data.bought);
-          setIsAlreadyRented(statusRes.data.rented);
         } catch (err) {
-          console.warn("Failed to fetch booking status, defaulting to false", err);
+          console.warn("Failed to fetch buy status, defaulting to false", err);
           setIsBought(false);
-          setIsAlreadyRented(false);
         }
 
       } catch (err) {
@@ -55,6 +52,77 @@ const PlaceDetail = () => {
     fetchPlaceData();
   }, [id, navigate]);
 
+  // Fetch all bookings for this place
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8000/api/admin/bookings/${id}`);
+        setBookings(res.data);
+      } catch (err) {
+        console.error("Error fetching bookings:", err);
+      }
+    };
+    fetchBookings();
+  }, [id]);
+
+  // Function to check if a date range is booked
+  // Function to check if a date range is booked
+  const isDateRangeBooked = (start, end) => {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    return bookings.some(b => {
+      const bookedStart = new Date(b.start_date || b.startDate);
+      const bookedEnd = new Date(b.end_date || b.endDate);
+
+      // Check if ranges overlap
+      return startDate <= bookedEnd && endDate >= bookedStart;
+    });
+  };
+
+  const getLatestBookingEndDate = () => {
+    if (bookings.length === 0) return null;
+
+    // Get the latest end_date
+    const latestBooking = bookings.reduce((latest, current) => {
+      const latestEnd = new Date(latest.endDate || latest.end_date);
+      const currentEnd = new Date(current.endDate || current.end_date);
+      return currentEnd > latestEnd ? current : latest;
+    });
+
+    return new Date(latestBooking.endDate || latestBooking.end_date);
+  };
+
+
+  // Check if property is currently booked
+  const today = new Date().toISOString().split("T")[0]; // yyyy-mm-dd
+  const isCurrentlyBooked = isDateRangeBooked(today, today);
+
+  // Auth check
+  const checkAuth = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      navigate("/register");
+      return false;
+    }
+    return true;
+  };
+
+  const handleAction = (actionType, rentStart, rentEnd) => {
+  if (!checkAuth()) return;
+
+  if (actionType === "Buy" && isBought) {
+    toast.error("This property has already been bought!");
+    return;
+  }
+
+  if (actionType === "Rent" && isDateRangeBooked(rentStart, rentEnd)) {
+    toast.error("This property is already rented for selected dates!");
+    return;
+  }
+
+  navigate(`/book-now/${place.id}?action=${actionType}`);
+};
 
   if (!place) return <p>Loading place details...</p>;
 
@@ -69,32 +137,6 @@ const PlaceDetail = () => {
     }
     return imgs;
   })();
-
-  const checkAuth = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user) {
-      navigate("/register");
-      return false;
-    }
-    return true;
-  };
-
-  const handleAction = (actionType) => {
-    if (!checkAuth()) return;
-
-    if (actionType === "Buy" && isBought) {
-      toast.error("This property has already been bought!");
-      return;
-    }
-
-    if (actionType === "Rent" && isAlreadyRented) {
-      toast.error("This property is already booked for selected dates!");
-      return;
-    }
-
-    navigate(`/book-now/${place.id}?action=${actionType}`);
-  };
-
 
   return (
     <div className="place-container">
@@ -129,39 +171,68 @@ const PlaceDetail = () => {
           <p><strong>Bathrooms:</strong> {place.bathrooms}</p>
           <p><strong>Area:</strong> {place.area_sqft} sqft</p>
           <p><strong>Furnished:</strong> {place.furnished}</p>
-          <p>
-            <strong>Amenities:</strong>{" "}
-            {Array.isArray(place.amenities) ? place.amenities.join(", ") : place.amenities}
-          </p>
+          <p><strong>Amenities:</strong> {Array.isArray(place.amenities) ? place.amenities.join(", ") : place.amenities}</p>
           <p><strong>Contact:</strong> {place.contact_number}</p>
           <p><strong>Owner:</strong> {place.owner_name || "N/A"}</p>
           <p>
             <strong>Status:</strong>{" "}
-            <span style={{ fontWeight: "bold", color: isBought ? "red" : "green" }}>
-              {isBought ? "Already Bought" : place.status}
+            <span
+              style={{
+                fontWeight: "bold",
+                color: isBought || isCurrentlyBooked ? "red" : "green",
+              }}
+            >
+              {isBought
+                ? "Already Bought"
+                : isCurrentlyBooked
+                  ? "Already Rented"
+                  : place.status}
             </span>
           </p>
+
           <p><strong>Created At:</strong> {new Date(place.created_at).toLocaleDateString()}</p>
         </div>
 
         <div className="button-group">
-          <button
-            className="rent-btn"
-            onClick={() => handleAction("Rent")}
-            disabled={isAlreadyRented || isBought}
-            style={{ cursor: isAlreadyRented || isBought ? "not-allowed" : "pointer" }}
-          >
-            {isAlreadyRented ? "Already Booked" : "Rent Now"}
-          </button>
+          {place.listing_type?.toLowerCase() === "rent" && (
+            <>
+              <button
+                className="rent-btn"
+                onClick={() => handleAction("Rent")}
+                disabled={isCurrentlyBooked || isBought}
+                style={{ cursor: isCurrentlyBooked || isBought ? "not-allowed" : "pointer" }}
+              >
+                {isCurrentlyBooked ? "Currently Booked" : "Rent Now"}
+              </button>
 
-          <button
-            className="buy-btn"
-            onClick={() => handleAction("Buy")}
-            disabled={isBought}
-            style={{ cursor: isBought ? "not-allowed" : "pointer" }}
-          >
-            {isBought ? "Already Bought" : "Buy Now"}
-          </button>
+              {/* 🕒 Show availability info */}
+              {isCurrentlyBooked && (
+                <p style={{ marginTop: "8px", color: "red", fontWeight: "500" }}>
+                  This property will be available after{" "}
+                  <span style={{ fontWeight: "bold" }}>
+                    {getLatestBookingEndDate()?.toLocaleDateString("en-IN", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                  .
+                </p>
+              )}
+            </>
+          )}
+
+
+          {place.listing_type?.toLowerCase() === "buy" && (
+            <button
+              className="buy-btn"
+              onClick={() => handleAction("Buy")}
+              disabled={isBought}
+              style={{ cursor: isBought ? "not-allowed" : "pointer" }}
+            >
+              {isBought ? "Already Bought" : "Buy Now"}
+            </button>
+          )}
 
           <Link to="/places" className="back-btn">Back to Places</Link>
         </div>

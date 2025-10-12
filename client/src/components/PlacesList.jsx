@@ -5,9 +5,6 @@ import "./PlacesList.css";
 import SearchBar from "./SearchBar";
 import { useNavigate } from "react-router-dom";
 
-
-
-
 const PlacesList = () => {
   const [places, setPlaces] = useState([]);
   const [filteredPlaces, setFilteredPlaces] = useState([]);

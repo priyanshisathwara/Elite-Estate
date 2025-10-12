@@ -2,7 +2,7 @@ import express from 'express';
 import { createPlace, getPlaces } from '../models/Places.js';
 import multer from "multer";
 import path from "path";
-import { checkBookingStatus, createBooking, deletePlace, getBookingsByUser, getPlaceById, getPlacedForAdminApproval, getPlacesForOwner, placeResult, updatePlace, updatePlaceApplication, updatePlaceStatus } from '../controllers/adminController.js';
+import { checkBookingStatus, createBooking, deletePlace, getBookingsByPlace, getBookingsByUser, getPlaceById, getPlacedForAdminApproval, getPlacesForOwner, placeResult, updatePlace, updatePlaceApplication, updatePlaceStatus } from '../controllers/adminController.js';
 import { verifyUser } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -48,6 +48,8 @@ router.get('/bookings/:placeId/checkBought', async (req, res) => {
   }
 });
 
+
+router.get("/bookings/:placeId", getBookingsByPlace);
 
 
 

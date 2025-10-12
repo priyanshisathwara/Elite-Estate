@@ -81,7 +81,19 @@ const CheckoutForm = ({
 
   return (
     <form onSubmit={handlePayment} className="payment-form">
-      <h2>Enter Card Details</h2>
+      <h2>Secure Payment</h2>
+
+      <div className="payment-summary">
+        <p><strong>Property ID:</strong> {placeId}</p>
+        <p><strong>Action:</strong> {actionType}</p>
+        <p><strong>Price:</strong> ₹{price}</p>
+
+        {actionType === "Rent" && startDate && endDate && (
+          <p><strong>Duration:</strong> {startDate} → {endDate}</p>
+        )}
+      </div>
+
+
       <div className="card-element-wrapper">
         <CardElement options={{ hidePostalCode: true }} />
       </div>
@@ -89,6 +101,7 @@ const CheckoutForm = ({
         {loading ? "Processing..." : `Pay ₹${price}`}
       </button>
     </form>
+
   );
 };
 
@@ -96,13 +109,13 @@ export default function PaymentPage() {
   const { placeId } = useParams(); // path param
   const [searchParams] = useSearchParams();
 
- const actionType = searchParams.get("action") || "Buy";
-  const userName = searchParams.get("userName") || "";
-  const userEmail = searchParams.get("userEmail") || "";
-  const userPhone = searchParams.get("userPhone") || "";
-  const price = searchParams.get("price") || "0";
-  const startDate = searchParams.get("startDate") || null;
-  const endDate = searchParams.get("endDate") || null;
+  const actionType = searchParams.get("action");
+  const userName = searchParams.get("userName");
+  const userEmail = searchParams.get("userEmail");
+  const userPhone = searchParams.get("userPhone");
+  const price = searchParams.get("price");
+  const startDate = searchParams.get("startDate");
+  const endDate = searchParams.get("endDate");
 
   if (!placeId) {
     return <p>Error: Invalid property selected. Please go back and choose a property.</p>;

@@ -23,7 +23,7 @@ export const getPlaceById = async (req, res) => {
 
 export const getPlacesForOwner = async (req, res) => {
   try {
-    const ownerName = req.user.name; 
+    const ownerName = req.user.name;
     const sql = "SELECT * FROM places WHERE owner_name = ? ORDER BY created_at DESC";
 
     db.query(sql, [ownerName], (err, result) => {
@@ -93,7 +93,28 @@ export const placeResult = async (req, res) => {
     if (results.length === 0) {
       return res.status(404).json({ message: "Place not found." });
     }
-    return res.status(200).json(results[0]); 
+    return res.status(200).json(results[0]);
+  });
+};
+
+export const getBookingsByPlace = (req, res) => {
+  const { placeId } = req.params;
+
+  const query = "SELECT * FROM bookings WHERE place_id = ?";
+
+  db.query(query, [placeId], (err, results) => {
+    if (err) {
+      console.error("Error fetching bookings:", err);
+      return res.status(500).json({ error: "Failed to fetch bookings" });
+    }
+
+    // If no bookings found, return an empty array instead of 404
+    if (results.length === 0) {
+      return res.status(200).json([]);
+    }
+
+    // Otherwise, return bookings
+    return res.status(200).json(results);
   });
 };
 
@@ -140,36 +161,36 @@ export const createBooking = (req, res) => {
     }
 
     // 3️⃣ For Rent, check overlapping dates
+    // 3️⃣ For Rent, check overlapping dates
     if (action_type === "Rent") {
       const checkQuery = `
-        SELECT * 
-        FROM bookings
-        WHERE place_id = ? 
-          AND action_type = 'Rent'
-          AND (
-            (start_date <= ? AND end_date >= ?)
-            OR (start_date <= ? AND end_date >= ?)
-            OR (start_date >= ? AND end_date <= ?)
-          )
-      `;
-      db.query(
-        checkQuery,
-        [placeId, start_date, start_date, end_date, end_date, start_date, end_date],
-        (checkErr, rows) => {
-          if (checkErr) {
-            console.error("Error checking availability:", checkErr);
-            return res.status(500).json({ error: "Failed to check availability" });
-          }
+    SELECT * 
+    FROM bookings
+    WHERE place_id = ? 
+      AND action_type = 'Rent'
+      AND NOT (
+        end_date < ? OR start_date > ?
+      )
+  `;
 
-          if (rows.length > 0) {
-            return res.status(409).json({ booked: true, message: "Place is already booked for the selected dates." });
-          }
-
-          // Proceed to insert rent booking
-          insertBooking("Rent");
+      db.query(checkQuery, [placeId, end_date, start_date], (checkErr, rows) => {
+        if (checkErr) {
+          console.error("Error checking availability:", checkErr);
+          return res.status(500).json({ error: "Failed to check availability" });
         }
-      );
-    } else {
+
+        if (rows.length > 0) {
+          return res.status(409).json({
+            booked: true,
+            message: "This property is already rented for the selected dates.",
+          });
+        }
+
+        // ✅ No overlap → proceed to booking
+        insertBooking("Rent");
+      });
+    }
+    else {
       // Buy: directly insert
       insertBooking("Buy");
     }
@@ -413,7 +434,7 @@ export const updatePlace = (req, res) => {
     return res.status(403).json({ error: "Access denied. Only owners can update properties." });
   }
 
-const images = req.files ? req.files.map(file => file.filename) : [];
+  const images = req.files ? req.files.map(file => file.filename) : [];
 
 
   const checkPlaceQuery = "SELECT * FROM places WHERE id = ?";

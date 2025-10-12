@@ -1,70 +1,105 @@
-/* Payment Page Container */
+
+/* 🌌 Main Container */
 .payment-page-container {
-  max-width: 500px;
-  margin: 50px auto;
-  padding: 30px;
-  background-color: #ffffff;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: var(--color-primary);
+  padding: 1rem;
   font-family: 'Poppins', sans-serif;
 }
 
-/* Payment Form Title */
-.payment-form h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-  font-size: 1.8rem;
-}
-
-/* Card Element Wrapper */
-.card-element-wrapper {
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 25px;
-  background-color: #f9f9f9;
-}
-
-/* Stripe Card Input Styling */
-.StripeElement {
-  padding: 12px 0;
-  font-size: 16px;
-  color: #333;
-}
-
-/* Submit Button */
-.payment-form button {
+/* 💳 Payment Form Card */
+.payment-form {
+  background: var(--color-accent);
+  padding: 2.5rem 2rem;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   width: 100%;
-  padding: 12px;
-  background-color: #4f46e5;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 500;
+  max-width: 420px;
+  text-align: center;
+}
+
+/* 🏷️ Heading */
+.payment-form h2 {
+  color: var(--color-primary);
+  margin-bottom: 1.8rem;
+  font-size: 1.6rem;
+  letter-spacing: 0.5px;
+}
+
+/* 💠 Card Input Box */
+.card-element-wrapper {
+  background: var(--color-accent);
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--color-highlight);
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.card-element-wrapper:focus-within {
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 5px rgba(107, 99, 97, 0.5);
+}
+
+/* 💰 Payment Summary */
+.payment-summary {
+  background: var(--color-accent);
+  border-radius: 18px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+  border: 1px solid var(--color-highlight);
+}
+
+/* ✅ All text inside summary should be black */
+.payment-summary p,
+.payment-summary strong {
+  color: #000; /* pure black */
+  margin: 6px 0;
+  font-size: 0.95rem;
+}
+
+
+/* 🔘 Pay Button */
+.payment-form button {
+  background: var(--color-secondary);
+  color: var(--color-accent);
+  font-weight: 600;
   border: none;
-  border-radius: 8px;
+  border-radius: 18px;
+  padding: 12px 20px;
+  width: 100%;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  font-size: 1rem;
+  transition: all 0.3s ease;
 }
 
 .payment-form button:hover {
-  background-color: #3730a3;
+  background: var(--color-highlight);
+  color: var(--color-primary);
 }
 
-.payment-form button:disabled {
-  background-color: #a5b4fc;
-  cursor: not-allowed;
-}
-
-/* ToastContainer Styling */
+/* ✅ Toast Customization */
 .Toastify__toast {
-  font-size: 14px;
+  border-radius: 18px !important;
+  background: var(--color-primary) !important;
+  color: var(--color-text) !important;
 }
 
-/* Responsive */
-@media screen and (max-width: 600px) {
-  .payment-page-container {
-    margin: 20px;
-    padding: 20px;
+/* 📱 Responsive Design */
+@media (max-width: 480px) {
+  .payment-form {
+    padding: 2rem 1.2rem;
+  }
+
+  .payment-form h2 {
+    font-size: 1.4rem;
+  }
+
+  .payment-form button {
+    font-size: 0.95rem;
   }
 }

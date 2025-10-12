@@ -43,7 +43,7 @@ const RentForm = () => {
       });
   }, [id]);
 
-  const handleSubmit = (e) => {
+ const handleSubmit = (e) => {
   e.preventDefault();
 
   if (!userName || !startDate || !endDate) {
@@ -56,20 +56,23 @@ const RentForm = () => {
     return;
   }
 
-  // Include query params here
+  // Build query params
   const queryParams = new URLSearchParams({
-    actionType: "Rent",
+    action: "Rent",   // must match PaymentPage
     userName,
     userEmail,
     userPhone,
     price: place.price,
-    startDate,
+    startDate,        // already yyyy-mm-dd from <input type="date">
     endDate,
   }).toString();
 
-  // Pass both path param and query params
+  console.log("Navigating with query params:", queryParams); // debug
+
   navigate(`/payment/${place.id}?${queryParams}`);
 };
+
+
 
   if (!place) return <p>Loading property details...</p>;
 
@@ -120,9 +123,14 @@ const RentForm = () => {
           required
         />
 
-        <button type="submit" className="rent-btn">
-          Proceed to Payment
-        </button>
+       <button
+  type="submit"
+  className="rent-btn"
+  onClick={() => console.log("Button clicked")}
+>
+  Proceed to Payment
+</button>
+
       </form>
 
       <ToastContainer />

@@ -20,10 +20,10 @@
   grid-template-columns: repeat(5, 1fr) 110px 50px;
   gap: 10px;
   align-items: center;
-  background: #f7f7f7;
+  background: var(--color-accent);
   border-radius: 14px;
   padding: 12px 14px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
@@ -33,28 +33,28 @@
 
 /* ✏️ Input Fields */
 .search-input {
-  border: none;
+  border: 1px solid var(--color-highlight);
   outline: none;
   font-size: 14px;
   padding: 9px 12px;
   border-radius: 8px;
-  background: #fff;
-  color: #333;
+  background: var(--color-accent);
+  color: var(--color-primary);
   width: 100%;
   box-sizing: border-box;
   transition: all 0.2s ease;
 }
 
 .search-input:focus {
-  outline: 2px solid #4a90e2;
-  box-shadow: 0 0 5px rgba(74, 144, 226, 0.25);
+  outline: 2px solid var(--color-secondary);
+  box-shadow: 0 0 6px rgba(107, 99, 97, 0.3);
 }
 
 /* 🗓️ Days Input (for Rent) */
 .days-input {
-  background: #fff;
-  border: 1px solid #ddd;
-  color: #333;
+  background: var(--color-accent);
+  border: 1px solid var(--color-highlight);
+  color: var(--color-primary);
   font-weight: 500;
   border-radius: 8px;
   padding: 9px 12px;
@@ -76,12 +76,13 @@
   display: flex;
   justify-content: center;
   gap: 10px;
-  background: #fff;
+  background: var(--color-accent);
   padding: 9px 12px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: var(--color-primary);
+  border: 1px solid var(--color-highlight);
 }
 
 .listing-type label {
@@ -92,7 +93,7 @@
 }
 
 .listing-type input[type="radio"] {
-  accent-color: #4a90e2;
+  accent-color: var(--color-secondary);
   cursor: pointer;
 }
 
@@ -102,8 +103,8 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #fff;
-  background-color: #4a4a4a;
+  color: var(--color-accent);
+  background-color: var(--color-secondary);
   border-radius: 10px;
   width: 42px;
   height: 42px;
@@ -111,7 +112,8 @@
 }
 
 .search-icon:hover {
-  background-color: #4a90e2;
+  background-color: var(--color-highlight);
+  color: var(--color-primary);
   transform: scale(1.05);
 }
 
@@ -121,14 +123,14 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: #fff;
-  color: #333;
+  background: var(--color-primary);
+  color: var(--color-text);
   z-index: 100;
   margin-top: 6px;
   border-radius: 8px;
   max-height: 280px;
   overflow-y: auto;
-  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.25);
   animation: fadeIn 0.2s ease-in-out;
 }
 
@@ -137,13 +139,14 @@
   padding: 10px 14px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-secondary);
   font-size: 13.5px;
+  color: var(--color-text);
 }
 
 .search-suggestion-line:hover {
-  background: #4a90e2;
-  color: #fff;
+  background: var(--color-secondary);
+  color: var(--color-accent);
 }
 
 /* 🧩 Animation */
