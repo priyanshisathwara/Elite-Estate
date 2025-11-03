@@ -4,15 +4,13 @@
   flex-wrap: wrap;
   gap: 40px;
   width: 100%;
-  margin: 0 0 50px 0;          /* removed top margin */
+  margin: 0 0 50px 0;
   padding: 40px 60px;
   background-color: var(--color-primary);
-  border-radius: 0;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
   color: var(--color-text);
+  transition: all 0.3s ease;
 }
-
-
 
 /* 🖼️ Left Column - Image Gallery */
 .left-column {
@@ -178,15 +176,19 @@
   transform: scale(1.05);
 }
 
-/* 📱 Responsive Design */
-@media (max-width: 992px) {
+/* 🧩 Responsive Design */
+
+/* 📱 Tablets (≤1024px) */
+@media (max-width: 1024px) {
   .place-container {
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 30px;
+    gap: 30px;
   }
 
-  .left-column {
+  .left-column,
+  .right-column {
     width: 100%;
     min-width: auto;
   }
@@ -195,8 +197,12 @@
     height: 350px;
   }
 
-  .right-column {
-    width: 100%;
+  .place-title {
+    font-size: 1.8rem;
+  }
+
+  .place-price {
+    font-size: 1.2rem;
   }
 
   .place-info {
@@ -204,21 +210,87 @@
   }
 }
 
-@media (max-width: 576px) {
+/* 📲 Mobile (≤768px) */
+@media (max-width: 768px) {
+  .place-container {
+    padding: 20px;
+    gap: 25px;
+  }
+
   .main-image {
-    height: 260px;
+    height: 300px;
   }
 
   .thumbnail-gallery img {
-    width: 70px;
-    height: 60px;
+    width: 75px;
+    height: 65px;
   }
 
   .place-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
 
   .place-price {
     font-size: 1.1rem;
+  }
+
+  .place-description {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .button-group {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .button-group button,
+  .rent-btn,
+  .buy-btn,
+  .back-btn {
+    width: 100%;
+  }
+}
+
+/* 📞 Small Mobile (≤480px) */
+@media (max-width: 480px) {
+  .place-container {
+    padding: 15px;
+  }
+
+  .main-image {
+    height: 220px;
+  }
+
+  .thumbnail-gallery img {
+    width: 60px;
+    height: 50px;
+  }
+
+  .place-title {
+    font-size: 1.4rem;
+  }
+
+  .place-price {
+    font-size: 1rem;
+  }
+
+  .place-description {
+    font-size: 0.85rem;
+  }
+
+  .place-info {
+    font-size: 0.85rem;
+  }
+
+  .button-group {
+    gap: 10px;
+  }
+
+  .rent-btn,
+  .buy-btn,
+  .back-btn {
+    font-size: 0.9rem;
+    padding: 10px;
   }
 }

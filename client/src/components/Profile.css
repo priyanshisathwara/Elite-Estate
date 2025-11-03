@@ -1,5 +1,4 @@
-
-/* Profile container */
+/* 🌟 Base Styles */
 .profile-container {
   padding: 40px 20px;
   background-color: var(--color-accent);
@@ -9,15 +8,16 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   text-align: center;
   color: rgb(63, 27, 27);
+  transition: all 0.3s ease;
 }
 
-/* Profile details */
+/* Profile Details */
 .profile-details {
   max-width: 500px;
   margin: 0 auto;
 }
 
-/* Profile Info Styling */
+/* Profile Info */
 .profile-info {
   background-color: var(--color-secondary);
   padding: 20px;
@@ -30,7 +30,7 @@
   margin: 10px 0;
 }
 
-/* Logout button */
+/* Logout Button */
 .logout-btn {
   margin-top: 20px;
   padding: 10px 20px;
@@ -48,16 +48,15 @@
   color: var(--color-primary);
 }
 
-/* Booked places container */
+/* 📦 Booked Places Section */
 .booked-places {
-  width: 100vw;
+  width: 100%;
   padding: 40px 20px;
   font-family: 'Segoe UI', sans-serif;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   text-align: center;
 }
 
@@ -69,7 +68,7 @@
   color: var(--color-primary);
 }
 
-/* Button Styling */
+/* Button */
 .booked-places button {
   margin: 0 auto 40px auto;
   padding: 12px 24px;
@@ -89,15 +88,15 @@
   transform: scale(1.05);
 }
 
-/* Bookings Grid Layout */
+/* Grid Layout */
 .bookings-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 35px;             /* same gap as .grid */
+  gap: 35px;
   width: 100%;
-  max-width: 1200px;     /* align with container */
-  margin: 30px auto;     /* center with spacing */
+  max-width: 1200px;
+  margin: 30px auto;
   padding: 0;
   list-style: none;
 }
@@ -108,7 +107,7 @@
   border-radius: 18px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
-  width: 330px;          /* 3 per row */
+  width: 330px;
   overflow: hidden;
 }
 
@@ -140,4 +139,106 @@
 .booking-details p strong {
   color: var(--color-primary);
   font-weight: 600;
+}
+
+/* 🧩 RESPONSIVE DESIGN */
+
+/* Tablet (≤1024px) */
+@media (max-width: 1024px) {
+  .profile-container {
+    max-width: 90%;
+    padding: 30px 15px;
+  }
+
+  .bookings-list {
+    gap: 25px;
+  }
+
+  .booking-card {
+    width: 300px;
+  }
+
+  .booked-places h3 {
+    font-size: 24px;
+  }
+
+  .booked-places button {
+    font-size: 16px;
+    padding: 10px 20px;
+  }
+}
+
+/* Mobile (≤768px) */
+@media (max-width: 768px) {
+  .profile-container {
+    max-width: 95%;
+    margin: 20px auto;
+    padding: 25px 15px;
+  }
+
+  .profile-info p {
+    font-size: 14px;
+  }
+
+  .logout-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .bookings-list {
+    gap: 20px;
+  }
+
+  .booking-card {
+    width: 90%;
+  }
+
+  .booked-places h3 {
+    font-size: 22px;
+  }
+}
+
+/* Small Mobile (≤480px) */
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 20px 10px;
+    border-radius: 10px;
+  }
+
+  .profile-info {
+    padding: 15px;
+  }
+
+  .profile-info p {
+    font-size: 13px;
+  }
+
+  .logout-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .booked-places button {
+    width: 100%;
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .booking-card {
+    width: 100%;
+    border-radius: 14px;
+  }
+
+  .booking-image {
+    height: 180px;
+  }
+
+  .booking-details p {
+    font-size: 13px;
+  }
+
+  .booked-places h3 {
+    font-size: 20px;
+  }
 }

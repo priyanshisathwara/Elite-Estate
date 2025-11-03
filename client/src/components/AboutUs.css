@@ -1,182 +1,276 @@
-/* AboutUs.css */
 @import url('https://fonts.googleapis.com/css2?family=Meow+Script&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&family=Send+Flowers&display=swap');
 
-/* Flexbox layout for left and right containers */
+/* Base Layout */
 .about-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  padding: 2rem;
 }
 
+/* ===== Left Section ===== */
 .left-container {
-    flex: 1;
-    position: relative;
-    height: 400px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
-    align-items: center;     
-    text-align: center;      
-    color: var(--color-text);
-    font-size: 2rem;
-    font-weight: bold;
-    overflow: hidden;
-    background-image: url('/src/assets/h5.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+  flex: 1;
+  position: relative;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center;     
+  text-align: center;      
+  color: var(--color-text);
+  font-size: 2rem;
+  font-weight: bold;
+  overflow: hidden;
+  background-image: url('/src/assets/h5.jpg');
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
 }
 
 .left-container::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(26, 26, 26, 0.6); /* Overlay using primary color */
-    z-index: 0;
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(26, 26, 26, 0.6);
+  z-index: 0;
 }
 
 .left-container * {
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 1;
 }
 
-/* Title & subtitle */
+/* ===== Title & Subtitle ===== */
 .about-title {
-    font-size: 4.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: var(--color-text);
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--color-text);
 }
 
 .about-subtitle {
-    max-width: 70%;
-    font-family: "Meow Script", cursive;
-    font-weight: 400;
-    font-size: 2.2rem;
-    color: var(--color-accent);
-    margin-bottom: 20px;
+  max-width: 80%;
+  font-family: "Meow Script", cursive;
+  font-weight: 400;
+  font-size: 2rem;
+  color: var(--color-accent);
+  margin-bottom: 20px;
+  line-height: 1.3;
 }
 
 .text-highlight {
-    color: var(--color-secondary); /* Emerald for emphasis */
-    font-weight: bold;
+  color: var(--color-secondary);
+  font-weight: bold;
 }
 
+/* ===== Right Section ===== */
 .right-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
 }
 
+/* ===== Grid Layout ===== */
 .row-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-    max-width: 1200px;
-    width: 100%;
-    margin: auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: auto;
 }
 
+/* ===== Columns ===== */
 .cloumn-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    background: var(--color-accent);
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    color: var(--color-secondary) ;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background: var(--color-accent);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: var(--color-secondary);
+  transition: transform 0.3s ease;
 }
 
-.cloumn-container p{
-        font-size: 1rem;
-    color: var(--color-secondary) !important ;
-    margin-top: 1rem;
+.cloumn-container:hover {
+  transform: translateY(-5px);
 }
+
+.cloumn-container p {
+  font-size: 1rem;
+  color: var(--color-secondary);
+  margin-top: 1rem;
+  line-height: 1.5;
+}
+
+/* ===== Image Section ===== */
 .image-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .image-container img {
-    width: 100%;
-    height: auto;
-    max-width: 400px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  height: auto;
+  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Responsive */
-@media (max-width: 992px) {
-    .row-container {
-        grid-template-columns: 1fr;
-    }
-
-    .image-container img {
-        max-width: 100%;
-    }
-}
-
-/* About section */
+/* ===== About Text Sections ===== */
 .about-section h2 {
-    font-size: 1.8rem;
-    color: var(--color-primary);
-    margin-bottom: 1rem;
+  font-size: 1.8rem;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
 }
 
 .about-section p {
-    font-size: 1rem;
-    color: var(--color-secondary);
+  font-size: 1rem;
+  color: var(--color-secondary);
 }
 
-/* List */
+/* ===== List ===== */
 .about-list {
-    list-style: none;
-    padding: 0;
+  list-style: none;
+  padding: 0;
 }
 
 .about-list li {
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-    color: var(--color-primary);
+  font-size: 1rem;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  color: var(--color-primary);
 }
 
 .about-list li strong {
-    margin-left: 5px;
+  margin-left: 5px;
 }
 
-/* Grid text */
-.about-grid p {
-    font-size: 1rem;
-    color: var(--color-primary);
-}
-
-/* CTA Section */
+/* ===== CTA Section ===== */
 .about-cta {
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: var(--color-primary);
-    background: var(--color-accent);
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  background: var(--color-accent);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .about-cta h2 {
-    color: var(--color-secondary);
+  color: var(--color-secondary);
 }
 
-/* Highlight override */
+/* ===== Highlight override ===== */
 .text-highlight {
-    color: var(--color-highlight); /* Premium gold for small highlights */
+  color: var(--color-highlight);
+}
+
+/* ======================================================= */
+/* ================== RESPONSIVE DESIGN ================== */
+/* ======================================================= */
+
+/* 🖥 Tablet (992px and below) */
+@media (max-width: 992px) {
+  .about-content {
+    flex-direction: column;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .left-container {
+    min-height: 350px;
+    font-size: 1.5rem;
+  }
+
+  .about-title {
+    font-size: 3rem;
+  }
+
+  .about-subtitle {
+    font-size: 1.8rem;
+  }
+
+  .row-container {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .cloumn-container {
+    align-items: center;
+    text-align: center;
+  }
+
+  .right-container {
+    padding: 1rem;
+  }
+
+  .image-container img {
+    max-width: 80%;
+  }
+}
+
+/* 📱 Mobile (768px and below) */
+@media (max-width: 768px) {
+  .about-title {
+    font-size: 2.4rem;
+  }
+
+  .about-subtitle {
+    font-size: 1.4rem;
+  }
+
+  .left-container {
+    min-height: 300px;
+    font-size: 1.3rem;
+    padding: 1rem;
+  }
+
+  .about-content {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .cloumn-container {
+    padding: 1rem;
+  }
+
+  .image-container img {
+    max-width: 100%;
+  }
+}
+
+/* 📱 Small phones (480px and below) */
+@media (max-width: 480px) {
+  .about-title {
+    font-size: 2rem;
+  }
+
+  .about-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .left-container {
+    min-height: 250px;
+    font-size: 1rem;
+  }
+
+  .cloumn-container p {
+    font-size: 0.9rem;
+  }
+
+  .about-cta {
+    font-size: 1rem;
+    padding: 1rem;
+  }
 }

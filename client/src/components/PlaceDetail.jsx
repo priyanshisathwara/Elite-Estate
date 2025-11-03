@@ -94,9 +94,22 @@ const PlaceDetail = () => {
   };
 
 
-  // Check if property is currently booked
-  const today = new Date().toISOString().split("T")[0]; // yyyy-mm-dd
-  const isCurrentlyBooked = isDateRangeBooked(today, today);
+  // Check current date and booking status
+  const today = new Date();
+  const latestEndDate = getLatestBookingEndDate();
+
+  // Check if currently booked
+  const isCurrentlyBooked = bookings.some(b => {
+    const start = new Date(b.start_date || b.startDate);
+    const end = new Date(b.end_date || b.endDate);
+    return today >= start && today <= end; // today is inside the booking range
+  });
+
+  // Check if all bookings are past
+  const allBookingsEnded =
+    bookings.length > 0 &&
+    bookings.every(b => today > new Date(b.end_date || b.endDate));
+
 
   // Auth check
   const checkAuth = () => {
@@ -109,20 +122,20 @@ const PlaceDetail = () => {
   };
 
   const handleAction = (actionType, rentStart, rentEnd) => {
-  if (!checkAuth()) return;
+    if (!checkAuth()) return;
 
-  if (actionType === "Buy" && isBought) {
-    toast.error("This property has already been bought!");
-    return;
-  }
+    if (actionType === "Buy" && isBought) {
+      toast.error("This property has already been bought!");
+      return;
+    }
 
-  if (actionType === "Rent" && isDateRangeBooked(rentStart, rentEnd)) {
-    toast.error("This property is already rented for selected dates!");
-    return;
-  }
+    if (actionType === "Rent" && isDateRangeBooked(rentStart, rentEnd)) {
+      toast.error("This property is already rented for selected dates!");
+      return;
+    }
 
-  navigate(`/book-now/${place.id}?action=${actionType}`);
-};
+    navigate(`/book-now/${place.id}?action=${actionType}`);
+  };
 
   if (!place) return <p>Loading place details...</p>;
 
@@ -179,15 +192,18 @@ const PlaceDetail = () => {
             <span
               style={{
                 fontWeight: "bold",
-                color: isBought || isCurrentlyBooked ? "red" : "green",
+                color: isBought ? "red" : isCurrentlyBooked ? "orange" : "green",
               }}
             >
               {isBought
                 ? "Already Bought"
                 : isCurrentlyBooked
-                  ? "Already Rented"
-                  : place.status}
+                  ? "Currently Rented"
+                  : allBookingsEnded
+                    ? "Available"
+                    : place.status || "Available"}
             </span>
+
           </p>
 
           <p><strong>Created At:</strong> {new Date(place.created_at).toLocaleDateString()}</p>

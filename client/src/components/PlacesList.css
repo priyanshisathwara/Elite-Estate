@@ -42,6 +42,7 @@
 .hero-content {
   color: var(--color-accent);
   text-align: center;
+  padding: 0 1rem;
 }
 
 .hero-content h1 {
@@ -83,7 +84,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* keeps button at bottom */
+  justify-content: space-between;
 }
 
 .card:hover {
@@ -100,7 +101,7 @@
 }
 
 .card-content {
-  padding: 12px 15px 6px 15px; /* reduced bottom padding */
+  padding: 12px 15px 6px 15px;
 }
 
 .card h3 {
@@ -125,7 +126,7 @@
 .card-buttons {
   display: flex;
   gap: 8px;
-  margin: 4px auto 10px auto; /* reduced top margin */
+  margin: 4px auto 10px auto;
   width: 90%;
   justify-content: center;
 }
@@ -170,4 +171,161 @@
   font-size: 18px;
   color: var(--color-text);
   margin-top: 40px;
+}
+
+/* ======================================================= */
+/* ================== RESPONSIVE DESIGN ================== */
+/* ======================================================= */
+
+/* 🖥 Medium screens (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .hero.enhanced-hero {
+    height: 400px;
+  }
+
+  .hero-content h1 {
+    font-size: 32px;
+  }
+
+  .hero-content p {
+    font-size: 15px;
+  }
+
+  .card {
+    width: 280px;
+  }
+}
+
+/* 📱 Tablet (max-width: 768px) */
+@media (max-width: 768px) {
+  .hero.enhanced-hero {
+    height: 350px;
+  }
+
+  .hero-content h1 {
+    font-size: 28px;
+  }
+
+  .hero-content p {
+    font-size: 14px;
+  }
+
+  .place-category-title {
+    font-size: 22px;
+  }
+
+  .grid {
+    gap: 15px;
+  }
+
+  .card {
+    width: 90%;
+    max-width: 420px;
+  }
+
+  .card img {
+    height: 180px;
+  }
+
+  .card h3 {
+    font-size: 16px;
+  }
+
+  .card p {
+    font-size: 12px;
+  }
+
+  .book-now-btn,
+  .add-to-cart-btn {
+    font-size: 13px;
+    padding: 7px 14px;
+  }
+}
+
+/* 📱 Mobile (max-width: 576px) */
+@media (max-width: 576px) {
+  .hero.enhanced-hero {
+    height: 300px;
+  }
+
+  .hero-content {
+    padding: 0 10px;
+  }
+
+  .hero-content h1 {
+    font-size: 24px;
+  }
+
+  .hero-content p {
+    font-size: 13px;
+  }
+
+  .place-category-title {
+    font-size: 20px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 12px;
+  }
+
+  .card img {
+    height: 160px;
+  }
+
+  .card-content {
+    padding: 10px 12px;
+  }
+
+  .card h3 {
+    font-size: 15px;
+  }
+
+  .card p {
+    font-size: 12px;
+  }
+
+  .book-now-btn,
+  .add-to-cart-btn {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+
+/* 📱 Small Phones (max-width: 400px) */
+@media (max-width: 400px) {
+  .hero.enhanced-hero {
+    height: 250px;
+  }
+
+  .hero-content h1 {
+    font-size: 20px;
+  }
+
+  .hero-content p {
+    font-size: 12px;
+  }
+
+  .place-category-title {
+    font-size: 18px;
+  }
+
+  .card img {
+    height: 140px;
+  }
+
+  .card h3 {
+    font-size: 14px;
+  }
+
+  .card p {
+    font-size: 11px;
+  }
+
+  .book-now-btn,
+  .add-to-cart-btn {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
 }

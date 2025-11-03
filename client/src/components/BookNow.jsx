@@ -94,23 +94,30 @@ const BookNow = () => {
 
   // Proceed to payment
   const handleProceedToPayment = () => {
-    if (!bookingStartDate || !bookingEndDate) {
-      toast.error("Please select start and end dates.");
-      return;
-    }
-
-    if (isDateRangeBooked(bookingStartDate, bookingEndDate)) {
-      toast.error("Selected dates are already booked. Please choose another period.");
-      return;
-    }
-
     if (!userName.trim()) {
       toast.error("Please enter your name.");
       return;
     }
 
-    const totalDays = calculateDays(bookingStartDate, bookingEndDate);
-    const totalPrice = (place?.price || 0) * totalDays;
+    let totalPrice = place?.price || 0;
+    let startDate = bookingStartDate;
+    let endDate = bookingEndDate;
+
+    // Only validate dates for Rent
+    if (actionType === "Rent") {
+      if (!bookingStartDate || !bookingEndDate) {
+        toast.error("Please select start and end dates.");
+        return;
+      }
+
+      if (isDateRangeBooked(bookingStartDate, bookingEndDate)) {
+        toast.error("Selected dates are already booked. Please choose another period.");
+        return;
+      }
+
+      const totalDays = calculateDays(bookingStartDate, bookingEndDate);
+      totalPrice = (place?.price || 0) * totalDays;
+    }
 
     const qs = new URLSearchParams({
       action: actionType,
@@ -119,12 +126,13 @@ const BookNow = () => {
       userName: userName,
       userPhone: userPhone,
       price: totalPrice.toString(),
-      startDate: bookingStartDate,
-      endDate: bookingEndDate,
+      startDate: startDate || "",
+      endDate: endDate || "",
     }).toString();
 
     navigate(`/payment/${id}?${qs}`);
   };
+
 
   if (!place) return <p>Loading place details...</p>;
 
@@ -191,7 +199,11 @@ const BookNow = () => {
           type="button"
           className="book-now-button"
           onClick={handleProceedToPayment}
-          disabled={!bookingStartDate || !bookingEndDate || isDateRangeBooked(bookingStartDate, bookingEndDate)}
+          disabled={
+            actionType === "Rent" &&
+            (!bookingStartDate || !bookingEndDate || isDateRangeBooked(bookingStartDate, bookingEndDate))
+          }
+
         >
           {isDateRangeBooked(bookingStartDate, bookingEndDate) ? "Dates Not Available" : "Proceed to Payment"}
         </button>
