@@ -1,3 +1,19 @@
+.logout-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+}
 
 
 /* Sidebar container */

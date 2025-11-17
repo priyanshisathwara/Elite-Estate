@@ -2,7 +2,7 @@ import express from 'express';
 import { createPlace, getPlaces } from '../models/Places.js';
 import multer from "multer";
 import path from "path";
-import { checkBookingStatus, createBooking, deletePlace, getBookingsByPlace, getBookingsByUser, getPlaceById, getPlacedForAdminApproval, getPlacesForOwner, placeResult, updatePlace, updatePlaceApplication, updatePlaceStatus } from '../controllers/adminController.js';
+import { checkBookingStatus, createBooking, deletePlace, getBookingsByPlace, getBookingsByUser, getDashboardStats, getPlaceById, getPlacedForAdminApproval, getPlacesForOwner, placeResult, updatePlace, updatePlaceApplication, updatePlaceStatus } from '../controllers/adminController.js';
 import { verifyUser } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -50,6 +50,16 @@ router.get('/bookings/:placeId/checkBought', async (req, res) => {
 
 
 router.get("/bookings/:placeId", getBookingsByPlace);
+
+router.get("/dashboard-stats", async (req, res) => {
+  try {
+    const stats = await getDashboardStats();
+    res.json(stats);
+  } catch (error) {
+    console.error("Error fetching dashboard stats:", error);
+    res.status(500).json({ message: "Error fetching dashboard stats" });
+  }
+});
 
 
 

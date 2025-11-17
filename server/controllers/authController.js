@@ -26,7 +26,8 @@ export const loginUser = async (req, res) => {
           { expiresIn: '1d' }
         );
 
-        if (userRole === 'user' || userRole === 'owner') {
+        if (userRole === 'user' || userRole === 'owner' || userRole === 'admin')
+ {
           res.status(200).json({
             Login: true,
           

@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Signup from './components/Signup';
 import Login from './components/Login';
 import Home from './components/Home';
@@ -11,7 +11,7 @@ import PlacesList from './components/PlacesList';
 import AboutUs from './components/AboutUs';
 import SearchBar from './components/SearchBar';
 import CityResult from './components/CityResults';
-import Admin from './components/Admin/AdminDashboard';
+import Admin from './components/Admin/Admin';
 import Profile from './components/Profile';
 import BookNow from './components/BookNow';
 import Experience from './components/Experience';
@@ -28,47 +28,76 @@ import RentForm from './components/RentForm';
 import Sections from './components/Sections';
 import ViMi from './components/ViMi';
 import PaymentPage from './components/PaymentPage';
+import AdminLogin from './components/Admin/AdminLogin';
+import ProtectedAdminRoute from './components/Admin/ProtectedAdminRoute';
 
 
 function App() {
 
   return (
-   <BrowserRouter>
-   <ScrollToTop />
-   <Routes>
-   <Route path='/' element={<Home />}/>
-    <Route path='/register' element={<Signup />}></Route>
-    <Route path="/login" element={<Login />} />
-    <Route path='/forgot' element={<Forgot />}/>
-    <Route path='/otp-form/:email' element={<OtpForm />}/>
-    <Route path='/add-places' element={<AddPlace />}/>
-    <Route path='/reset-password-form' element={<ResetPassword />}/>
-    <Route path='/places' element={<PlacesList />}/>
-    <Route path='/about-us' element={<AboutUs />}/>
-    <Route path='/search' element={<SearchBar />}/>
-    <Route path="/places/:id" element={<CityResult />} />
-    <Route path="/places/name/:city" element={<CityResult />} />
-    <Route path="/admin/*" element={<Admin />} />
-    <Route path="/profile" element={<Profile />} />
-    <Route path="/book-now/:id" element={<BookNow />} />
-    <Route path="/experience" element={<Experience />} />
-    <Route path="/update-place/:id" element={<UpdatePlace />} />
-    <Route path="/owner-dashboard" element={<OwnerDashboard />} />
-    <Route path="/owner-request-list" element={<OwnerRequestList />} />
-    <Route path="/contact-us" element={<ContactUs />} />
-    <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-    <Route path="/terms-of-service" element={<TermsOfService />} />
-    <Route path="/placedetails/:id" element={<PlaceDetail />} />
-    <Route path="/city/:city" element={<CityResult />} />
-     <Route path="/rent/:id" element={<RentForm />} /> 
-     <Route path="/section" element={<Sections />} /> 
-     <Route path="/vimi" element={<ViMi />} /> 
-     <Route path="/payment/:placeId" element={<PaymentPage />} />
+    <BrowserRouter>
+      <ScrollToTop />
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/register' element={<Signup />}></Route>
+        <Route path="/login" element={<Login />} />
+        <Route path='/forgot' element={<Forgot />} />
+        <Route path='/otp-form/:email' element={<OtpForm />} />
+        <Route path='/add-places' element={<AddPlace />} />
+        <Route path='/reset-password-form' element={<ResetPassword />} />
+        <Route path='/places' element={<PlacesList />} />
+        <Route path='/about-us' element={<AboutUs />} />
+        <Route path='/search' element={<SearchBar />} />
+        <Route path="/places/:id" element={<CityResult />} />
+        <Route path="/places/name/:city" element={<CityResult />} />
+
+        <Route path="/admin">
+          <Route
+            index
+            element={
+              localStorage.getItem("token") && localStorage.getItem("role") === "admin" ? (
+                <ProtectedAdminRoute>
+                  <Admin />
+                </ProtectedAdminRoute>
+              ) : (
+                <Navigate to="login" replace />
+              )
+            }
+          />
+
+          <Route path="login" element={<AdminLogin />} />
+
+          <Route
+            path="*"
+            element={
+              <ProtectedAdminRoute>
+                <Admin />
+              </ProtectedAdminRoute>
+            }
+          />
+        </Route>
 
 
-  
-   </Routes>
-   </BrowserRouter>
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/book-now/:id" element={<BookNow />} />
+        <Route path="/experience" element={<Experience />} />
+        <Route path="/update-place/:id" element={<UpdatePlace />} />
+        <Route path="/owner-dashboard" element={<OwnerDashboard />} />
+        <Route path="/owner-request-list" element={<OwnerRequestList />} />
+        <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/placedetails/:id" element={<PlaceDetail />} />
+        <Route path="/city/:city" element={<CityResult />} />
+        <Route path="/rent/:id" element={<RentForm />} />
+        <Route path="/section" element={<Sections />} />
+        <Route path="/vimi" element={<ViMi />} />
+        <Route path="/payment/:placeId" element={<PaymentPage />} />
+
+
+
+      </Routes>
+    </BrowserRouter>
   )
 }
 

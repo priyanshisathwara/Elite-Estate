@@ -1,0 +1,78 @@
+:root {
+  --color-primary: #2b2622;   /* Dark Espresso */
+  --color-secondary: #6b6361; /* Deep Taupe */
+  --color-accent: #e6e6e5;    /* Soft Silver */
+  --color-text: #cecbc7;      /* Light Beige Gray */
+  --color-highlight: #aaa39d; /* Warm Gray */
+}
+
+/* Scoped Dashboard Layout */
+.admin-dashboard-page {
+  margin-left: 250px; /* sidebar offset */
+  padding: 30px;
+  min-height: 100vh;
+  background-color: var(--color-accent);
+  color: #333;
+  box-sizing: border-box;
+}
+
+/* Header Section */
+.admin-dashboard-page .dashboard-header {
+  margin-bottom: 30px;
+}
+
+.admin-dashboard-page .welcome-msg {
+  color: var(--color-secondary);
+  font-weight: 600;
+}
+
+/* Dashboard Cards */
+.admin-dashboard-page .dashboard-cards {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.admin-dashboard-page .dashboard-card {
+  background: #fff;
+  flex: 1;
+  min-width: 220px;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-dashboard-page .dashboard-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 5px 14px rgba(0,0,0,0.15);
+}
+
+.admin-dashboard-page .dashboard-card h3 {
+  color: var(--color-primary);
+  margin-bottom: 10px;
+}
+
+.admin-dashboard-page .dashboard-card p {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--color-secondary);
+}
+
+/* Charts Section */
+.admin-dashboard-page .charts-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.admin-dashboard-page .chart-card {
+  background: #fff;
+  flex: 1;
+  min-width: 300px;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}

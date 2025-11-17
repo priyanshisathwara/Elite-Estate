@@ -1,12 +1,10 @@
-
-
 .admin-request-container {
     padding: 2rem;
     font-family: Arial, sans-serif;
     background-color: var(--color-primary);
     min-height: 100vh;
-    margin-left: 250px;
     color: var(--color-text);
+    margin-left: 235px;
 }
 
 .filter-buttons {
