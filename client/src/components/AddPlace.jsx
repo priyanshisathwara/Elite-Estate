@@ -149,6 +149,7 @@ export default function AddPlace() {
               <option value="Vadodara">Vadodara</option>
               <option value="Rajkot">Rajkot</option>
               <option value="Bhavnagar">Bhavnagar</option>
+               <option value="Gandhinagar">Gandhinagar</option>
               {/* ... add more cities */}
             </select>
           </div>

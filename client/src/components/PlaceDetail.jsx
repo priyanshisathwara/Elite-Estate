@@ -210,18 +210,21 @@ const PlaceDetail = () => {
         </div>
 
         <div className="button-group">
+
+          {/* ---------- RENT BUTTON ---------- */}
           {place.listing_type?.toLowerCase() === "rent" && (
             <>
               <button
                 className="rent-btn"
                 onClick={() => handleAction("Rent")}
                 disabled={isCurrentlyBooked || isBought}
-                style={{ cursor: isCurrentlyBooked || isBought ? "not-allowed" : "pointer" }}
+                style={{
+                  cursor: isCurrentlyBooked || isBought ? "not-allowed" : "pointer"
+                }}
               >
                 {isCurrentlyBooked ? "Currently Booked" : "Rent Now"}
               </button>
 
-              {/* 🕒 Show availability info */}
               {isCurrentlyBooked && (
                 <p style={{ marginTop: "8px", color: "red", fontWeight: "500" }}>
                   This property will be available after{" "}
@@ -231,27 +234,50 @@ const PlaceDetail = () => {
                       month: "long",
                       day: "numeric",
                     })}
-                  </span>
-                  .
+                  </span>.
                 </p>
               )}
             </>
           )}
 
-
+          {/* ---------- BUY BUTTON (UPDATED WITH UPCOMING PROJECT) ---------- */}
           {place.listing_type?.toLowerCase() === "buy" && (
-            <button
-              className="buy-btn"
-              onClick={() => handleAction("Buy")}
-              disabled={isBought}
-              style={{ cursor: isBought ? "not-allowed" : "pointer" }}
-            >
-              {isBought ? "Already Bought" : "Buy Now"}
-            </button>
+            <>
+              <button
+                className="buy-btn"
+                onClick={() => handleAction("Buy")}
+                disabled={
+                  isBought || place.status?.toLowerCase() === "upcoming"
+                }
+                style={{
+                  cursor:
+                    isBought || place.status?.toLowerCase() === "upcoming"
+                      ? "not-allowed"
+                      : "pointer",
+                  opacity:
+                    isBought || place.status?.toLowerCase() === "upcoming"
+                      ? 0.6
+                      : 1
+                }}
+              >
+                {isBought
+                  ? "Already Bought"
+                  : place.status?.toLowerCase() === "upcoming"
+                    ? "Upcoming Project"
+                    : "Buy Now"}
+              </button>
+
+              {place.status?.toLowerCase() === "upcoming" && (
+                <p style={{ color: "orange", marginTop: "8px", fontWeight: "500" }}>
+                  This project is upcoming. Booking will open soon.
+                </p>
+              )}
+            </>
           )}
 
           <Link to="/places" className="back-btn">Back to Places</Link>
         </div>
+
 
       </div>
 

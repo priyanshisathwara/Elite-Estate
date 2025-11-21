@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import "./PlacesList.css";
 import SearchBar from "./SearchBar";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
 
 const PlacesList = () => {
   const [places, setPlaces] = useState([]);
@@ -43,6 +44,7 @@ const PlacesList = () => {
 
   return (
     <div className="places-list-page">
+      <Navbar />
       {/* Hero Section */}
       <section className="hero enhanced-hero">
         <div className="hero-overlay">

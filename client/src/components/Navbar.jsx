@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { FaUserCircle } from "react-icons/fa";
+import { FaHome, FaUserCircle } from "react-icons/fa";
 import "./Navbar.css";
+
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 export default function Navbar() {
@@ -37,8 +38,8 @@ export default function Navbar() {
     <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
       {/* Logo */}
       <div className="logo">
-        <span className="black-text">Elite</span>
-        <span className="blue-text">Estate.</span>
+        <FaHome size={25} style={{ marginRight: "10px", marginTop:"-7px", cursor: "pointer" }} />
+        <span className="blue-text">Elite Estate.</span>
       </div>
 
       {/* Hamburger menu icon */}

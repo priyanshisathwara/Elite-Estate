@@ -1,8 +1,10 @@
 import "./AboutUs.css";
+import Navbar from "./Navbar";
 
 export default function AboutUs() {
     return (
         <div className="about-container">
+            <Navbar />
             <div className="left-container">
                 <h1 className="about-title">About Us</h1><br />
                 <p className="about-subtitle">

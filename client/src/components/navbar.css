@@ -25,10 +25,6 @@
   color: var(--color-primary); /* Deep Charcoal */
 }
 
-.black-text {
-  color: var(--color-text); /* White */
-  font-family: 'cursive';
-}
 
 .blue-text {
   color: var(--color-secondary); /* Emerald */
